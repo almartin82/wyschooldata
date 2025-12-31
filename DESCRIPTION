@@ -1,0 +1,39 @@
+Package: wyschooldata
+Title: Fetch and Process Wyoming School Data
+Version: 0.1.0
+Authors@R:
+    person("Al", "Martin", , "almartin@example.com", role = c("aut", "cre"))
+Description: Downloads and processes school data from the Wyoming Department of
+    Education (WDE). Provides functions for fetching enrollment data from WDE's
+    reporting system and transforming it into tidy format for analysis. Supports
+    data from 2002 to present across two format eras: PDF reports (2002-2007) and
+    the interactive WDE reporting system (2008+).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends:
+    R (>= 4.0)
+Imports:
+    dplyr,
+    readr,
+    purrr,
+    stringr,
+    tidyr,
+    rlang,
+    httr,
+    rappdirs,
+    rvest,
+    xml2
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    ggplot2,
+    scales,
+    pdftools,
+    curl
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+URL: https://almartin82.github.io/wyschooldata/, https://github.com/almartin82/wyschooldata
+BugReports: https://github.com/almartin82/wyschooldata/issues

@@ -1,0 +1,64 @@
+#' wyschooldata: Fetch and Process Wyoming School Data
+#'
+#' Downloads and processes school data from the Wyoming Department of Education
+#' (WDE). Provides functions for fetching enrollment data and transforming it
+#' into tidy format for analysis. Supports data from 2002 to present.
+#'
+#' @section Main functions:
+#' \describe{
+#'   \item{\code{\link{fetch_enr}}}{Fetch enrollment data for a school year}
+#'   \item{\code{\link{fetch_enr_multi}}}{Fetch enrollment data for multiple years}
+#'   \item{\code{\link{tidy_enr}}}{Transform wide data to tidy (long) format}
+#'   \item{\code{\link{id_enr_aggs}}}{Add aggregation level flags}
+#'   \item{\code{\link{enr_grade_aggs}}}{Create grade-level aggregations}
+#'   \item{\code{\link{get_available_years}}}{List available data years}
+#' }
+#'
+#' @section Cache functions:
+#' \describe{
+#'   \item{\code{\link{cache_status}}}{View cached data files}
+#'   \item{\code{\link{clear_cache}}}{Remove cached data files}
+#' }
+#'
+#' @section ID System:
+#' Wyoming uses a 7-digit ID system:
+#' \itemize{
+#'   \item District IDs: 7 digits (e.g., 1902000 = Laramie County SD #1)
+#'   \item School IDs: 7 digits (unique per school)
+#' }
+#'
+#' @section Data Sources:
+#' Data is sourced from the Wyoming Department of Education:
+#' \itemize{
+#'   \item WDE Data Portal: \url{https://edu.wyoming.gov/data/}
+#'   \item Enrollment Reports: \url{https://edu.wyoming.gov/data/school-district-enrollment-and-staffing-data/}
+#'   \item Reporting System: \url{https://reporting.edu.wyo.gov/}
+#' }
+#'
+#' @section Format Eras:
+#' Wyoming enrollment data comes in two format eras:
+#' \describe{
+#'   \item{PDF Era (2002-2007)}{Historical PDF files on edu.wyoming.gov}
+#'   \item{Modern Era (2008-present)}{Interactive reports on reporting.edu.wyo.gov}
+#' }
+#'
+#' @docType package
+#' @name wyschooldata-package
+#' @aliases wyschooldata
+#' @keywords internal
+"_PACKAGE"
+
+#' Pipe operator
+#'
+#' See \code{magrittr::\link[magrittr:pipe]{\%>\%}} for details.
+#'
+#' @name %>%
+#' @rdname pipe
+#' @keywords internal
+#' @export
+#' @importFrom dplyr %>%
+#' @usage lhs \%>\% rhs
+#' @param lhs A value or the magrittr placeholder.
+#' @param rhs A function call using the magrittr semantics.
+#' @return The result of calling `rhs(lhs)`.
+NULL
