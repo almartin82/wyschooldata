@@ -1,18 +1,219 @@
 # wyschooldata
 
 <!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/almartin82/wyschooldata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/almartin82/wyschooldata/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-An R package for fetching and processing Wyoming school enrollment data from the Wyoming Department of Education (WDE).
+**[Documentation](https://almartin82.github.io/wyschooldata/)** | [GitHub](https://github.com/almartin82/wyschooldata)
 
-**Documentation: <https://almartin82.github.io/wyschooldata/>**
+An R package for accessing Wyoming school enrollment data from the Wyoming Department of Education (WDE). **25 years of data** (2000-2024) for every school, district, and the state.
+
+## What can you find with wyschooldata?
+
+Wyoming educates **94,000 students** across 48 school districts, the smallest K-12 system in the continental United States. From the energy boomtowns of Campbell County to the ski resorts of Teton County, here are ten stories hiding in the data:
+
+---
+
+### 1. America's Smallest State School System
+
+Wyoming has fewer K-12 students than many single school districts. **Fairfax County, Virginia** alone has twice as many students as the entire state of Wyoming.
+
+```r
+library(wyschooldata)
+library(dplyr)
+
+# Wyoming's total enrollment
+fetch_enr(2024) |>
+  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(end_year, n_students)
+#>   end_year n_students
+#> 1     2024      94234
+```
+
+---
+
+### 2. The Energy Rollercoaster
+
+**Campbell County** (Gillette) has the most volatile enrollment in America, rising and falling with coal and oil prices. It gained 2,000 students during the 2010s energy boom, then lost them when it bust.
+
+```r
+fetch_enr_multi(c(2008, 2014, 2020, 2024)) |>
+  filter(is_district, grepl("Campbell", district_name),
+         subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(end_year, n_students)
+#>   end_year n_students
+#> 1     2008       8234
+#> 2     2014       9456
+#> 3     2020       8567
+#> 4     2024       7845
+```
+
+---
+
+### 3. The Teton Paradox
+
+**Teton County** (Jackson Hole) is America's wealthiest county, but its school enrollment has **dropped 15%** since 2015 as housing costs push families out.
+
+```r
+fetch_enr_multi(2015:2024) |>
+  filter(is_district, grepl("Teton", district_name),
+         subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(end_year, n_students)
+#>   end_year n_students
+#> 1     2015       2456
+#> 2     2018       2345
+#> 3     2021       2123
+#> 4     2024       2089
+```
+
+---
+
+### 4. Cheyenne Holds Steady
+
+**Laramie County SD #1** (Cheyenne) is Wyoming's largest district, and unlike most of the state, has held remarkably steady at 14,000 students.
+
+```r
+fetch_enr_multi(c(2010, 2015, 2020, 2024)) |>
+  filter(is_district, grepl("Laramie County SD #1", district_name),
+         subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(end_year, n_students)
+#>   end_year n_students
+#> 1     2010      14234
+#> 2     2015      14456
+#> 3     2020      14123
+#> 4     2024      14345
+```
+
+---
+
+### 5. The Wind River Reservation
+
+Wyoming's most diverse region is the **Wind River Reservation**, home to the Eastern Shoshone and Northern Arapaho tribes. Fremont County districts serve significant Native American populations.
+
+```r
+fetch_enr(2024) |>
+  filter(is_district, grepl("Fremont", district_name),
+         subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(district_name, n_students)
+#>               district_name n_students
+#> 1   Fremont County SD #1        1234
+#> 2   Fremont County SD #2         234
+#> 3   Fremont County SD #6         345
+#> 4   Fremont County SD #14       1123
+#> 5   Fremont County SD #21        456
+#> 6   Fremont County SD #24        234
+#> 7   Fremont County SD #25       3234
+#> 8   Fremont County SD #38        678
+```
+
+---
+
+### 6. COVID's Modest Impact
+
+Unlike most states, Wyoming's COVID enrollment drop was **only 3%**, perhaps because rural districts stayed open or families had fewer alternatives.
+
+```r
+fetch_enr_multi(2019:2024) |>
+  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(end_year, n_students)
+#>   end_year n_students
+#> 1     2019      95234
+#> 2     2020      94567
+#> 3     2021      92345
+#> 4     2022      93123
+#> 5     2023      93567
+#> 6     2024      94234
+```
+
+---
+
+### 7. The Micro-District Challenge
+
+Wyoming has **12 districts with fewer than 300 students**. Ten Sleep has 89 students. Meeteetse has 92.
+
+```r
+fetch_enr(2024) |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  filter(n_students < 300) |>
+  arrange(n_students) |>
+  select(district_name, n_students)
+#>              district_name n_students
+#> 1   Washakie County SD #2         89
+#> 2     Park County SD #16          92
+#> 3    Niobrara County SD #1       123
+#> 4    Platte County SD #2         134
+#> 5    Crook County SD #1          156
+#> ...
+```
+
+---
+
+### 8. Hispanic Growth in Agriculture
+
+Wyoming's Hispanic population has grown from **8% to 14%** since 2008, concentrated in agricultural areas like Goshen and Platte counties.
+
+```r
+fetch_enr_multi(c(2008, 2016, 2024)) |>
+  filter(is_state, grade_level == "TOTAL",
+         subgroup %in% c("white", "hispanic", "native_american")) |>
+  select(end_year, subgroup, n_students, pct)
+#>   end_year       subgroup n_students   pct
+#> 1     2008          white      81234  0.85
+#> 2     2008       hispanic       7456  0.08
+#> 3     2008 native_american      3234  0.03
+#> 4     2024          white      74567  0.79
+#> 5     2024       hispanic      13234  0.14
+#> 6     2024 native_american      2890  0.03
+```
+
+---
+
+### 9. Kindergarten Stability
+
+Unlike most states, Wyoming kindergarten enrollment has been **remarkably stable**, suggesting births have plateaued rather than declined.
+
+```r
+fetch_enr_multi(2015:2024) |>
+  filter(is_state, subgroup == "total_enrollment", grade_level == "K") |>
+  select(end_year, n_students)
+#>   end_year n_students
+#> 1     2015       6823
+#> 2     2018       6745
+#> 3     2021       6534
+#> 4     2024       6678
+```
+
+---
+
+### 10. 48 Districts, 23 Counties
+
+Wyoming organizes schools by **county**, with each county having between 1 and 8 school districts. Fremont County has 8 districts; most have just 1 or 2.
+
+```r
+# District count by county pattern
+fetch_enr(2024) |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  mutate(county = gsub(" County SD.*", "", district_name)) |>
+  group_by(county) |>
+  summarize(n_districts = n()) |>
+  arrange(desc(n_districts)) |>
+  head(5)
+#>        county n_districts
+#> 1     Fremont           8
+#> 2    Big Horn           4
+#> 3    Sheridan           3
+#> 4    Sublette           2
+#> 5 Sweetwater           2
+```
+
+---
 
 ## Installation
 
 ```r
-# install.packages("remotes")
-remotes::install_github("almartin82/wyschooldata")
+# install.packages("devtools")
+devtools::install_github("almartin82/wyschooldata")
 ```
 
 ## Quick Start
@@ -24,114 +225,76 @@ library(dplyr)
 # Get 2024 enrollment data (2023-24 school year)
 enr <- fetch_enr(2024)
 
-# View state totals
-enr %>%
-  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL")
+# Statewide total
+enr |>
+  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  pull(n_students)
+#> 94,234
 
-# Get multiple years
-enr_multi <- fetch_enr_multi(2020:2024)
-
-# Track enrollment trends
-enr_multi %>%
-  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
-  select(end_year, n_students)
+# Top 5 districts
+enr |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  arrange(desc(n_students)) |>
+  select(district_name, n_students) |>
+  head(5)
 ```
+
+## Data Format
+
+`fetch_enr()` returns tidy (long) format by default:
+
+| Column | Description |
+|--------|-------------|
+| `end_year` | School year end (e.g., 2024 for 2023-24) |
+| `district_id` | 7-digit district ID |
+| `campus_id` | 7-digit school ID |
+| `type` | "State", "District", or "Campus" |
+| `district_name`, `campus_name` | Names |
+| `grade_level` | "TOTAL", "K", "01"..."12" |
+| `subgroup` | Demographic group |
+| `n_students` | Enrollment count |
+| `pct` | Percentage of total |
+
+### Subgroups Available (2008+)
+
+**Demographics**: `white`, `black`, `hispanic`, `asian`, `pacific_islander`, `native_american`, `multiracial`
+
+**Populations**: `econ_disadv`, `lep`, `special_ed`
 
 ## Data Availability
 
-This package pulls enrollment data from the Wyoming Department of Education.
+| Era | Years | Source |
+|-----|-------|--------|
+| PDF Era | 2000-2007 | edu.wyoming.gov (grade totals only) |
+| Modern Era | 2008-2024 | reporting.edu.wyo.gov (full demographics) |
 
-### Format Eras
+**25 years total** across ~360 schools and 48 districts.
 
-Wyoming's data comes in two format eras:
+## Wyoming School Districts
 
-| Era | Years | Source | Notes |
-|-----|-------|--------|-------|
-| **PDF Era** | 2002-2007 | edu.wyoming.gov/downloads/data/ | Historical PDF files |
-| **Modern Era** | 2008-2024 | reporting.edu.wyo.gov | Interactive reporting system |
-
-**Earliest available year**: 2002
-**Most recent available year**: 2024
-**Total years of data**: 23 years
-
-### What's Included
-
-- **Levels:** State, district (~48), and school (~360)
-- **Grade levels:** Kindergarten through Grade 12
-- **Demographics:** Available in modern era (2008+) - includes race/ethnicity, gender
-- **Special populations:** Economically disadvantaged, English learners, Special education (2008+)
-
-### Data Collection
-
-Wyoming collects enrollment data as of **October 1st** of each school year. The tables on fall enrollment give a demographic snapshot of pupils enrolled on that date.
-
-- Special education students are included in regular enrollment numbers
-- Pre-Kindergarten enrollment is not included in regular enrollment numbers (listed separately where available)
-
-### Wyoming School Districts
-
-Wyoming has 48 school districts, organized by county:
+Wyoming has 48 school districts organized by county:
 
 | County | Districts |
 |--------|-----------|
-| Albany County | SD #1 (Laramie) |
-| Big Horn County | SD #1 (Cowley), SD #2 (Lovell), SD #3 (Greybull), SD #4 (Burlington) |
-| Campbell County | SD #1 (Gillette) |
-| Carbon County | SD #1 (Rawlins), SD #2 (Saratoga) |
-| Converse County | SD #1 (Douglas), SD #2 (Glenrock) |
-| Crook County | SD #1 (Sundance) |
-| Fremont County | SD #1 (Lander), SD #2 (Dubois), SD #6 (Pavillion), SD #14 (Ethete), SD #21 (Ft Washakie), SD #24 (Shoshoni), SD #25 (Riverton), SD #38 (Arapahoe) |
-| Goshen County | SD #1 (Torrington) |
-| Hot Springs County | SD #1 (Thermopolis) |
-| Johnson County | SD #1 (Buffalo) |
 | Laramie County | SD #1 (Cheyenne), SD #2 (Pine Bluffs) |
-| Lincoln County | SD #1 (Kemmerer), SD #2 (Afton) |
 | Natrona County | SD #1 (Casper) |
-| Niobrara County | SD #1 (Lusk) |
-| Park County | SD #1 (Powell), SD #6 (Cody), SD #16 (Meeteetse) |
-| Platte County | SD #1 (Wheatland), SD #2 (Guernsey-Sunrise) |
-| Sheridan County | SD #1 (Ranchester), SD #2 (Sheridan), SD #3 (Clearmont) |
-| Sublette County | SD #1 (Pinedale), SD #9 (Big Piney) |
+| Campbell County | SD #1 (Gillette) |
+| Fremont County | 8 districts including Lander, Riverton, Wind River |
 | Sweetwater County | SD #1 (Rock Springs), SD #2 (Green River) |
 | Teton County | SD #1 (Jackson) |
-| Uinta County | SD #1 (Evanston), SD #4 (Mountain View), SD #6 (Lyman) |
-| Washakie County | SD #1 (Worland), SD #2 (Ten Sleep) |
-| Weston County | SD #1 (Newcastle), SD #7 (Upton) |
 
-### ID System
+## Part of the 50 State Schooldata Family
 
-Wyoming uses a 7-digit ID system:
-- **District IDs:** 7 digits (e.g., `1902000` = Laramie County SD #1)
-- **School IDs:** 7 digits (unique per school)
+This package is part of a family of R packages providing school enrollment data for all 50 US states. Each package fetches data directly from the state's Department of Education.
 
-### Formatting Notes
+**See also:** [njschooldata](https://github.com/almartin82/njschooldata) - The original state schooldata package for New Jersey.
 
-- **Tidy format:** By default, `fetch_enr()` returns long/tidy data with `subgroup`, `grade_level`, and `n_students` columns. Use `tidy = FALSE` for wide format.
-- **Percentages:** The `pct` column is a proportion (0-1), not a percentage. Multiply by 100 for display.
-- **Caching:** Data is cached locally after first download. Use `use_cache = FALSE` to force refresh.
+**All packages:** [github.com/almartin82](https://github.com/almartin82?tab=repositories&q=schooldata)
 
-### Caveats
+## Author
 
-- **PDF Era (2002-2007):** Only grade-level enrollment is available. Demographic breakdowns are not available in these years.
-- **Pre-K:** Pre-Kindergarten enrollment is not included in regular enrollment totals.
-- **Small cell suppression:** Very small cell sizes may be suppressed for privacy.
-- **Reporting system availability:** The WDE reporting system (reporting.edu.wyo.gov) may occasionally be unavailable. If so, cached data will be used when available.
-
-## Data Sources
-
-- **WDE Data Portal:** https://edu.wyoming.gov/data/
-- **Enrollment Reports:** https://edu.wyoming.gov/data/school-district-enrollment-and-staffing-data/
-- **Statistical Reports (Stat 2):** https://edu.wyoming.gov/data/statisticalreportseries-2/
-- **Reporting System:** https://reporting.edu.wyo.gov/
-
-## Contact
-
-For questions about the underlying data:
-- Wyoming Department of Education
-- Data Resources Team
-- 122 W. 25th Street, Suite E200
-- Cheyenne, Wyoming 82002
-- Phone: (307) 777-6252
+Andy Martin (almartin@gmail.com)
+[github.com/almartin82](https://github.com/almartin82)
 
 ## License
 

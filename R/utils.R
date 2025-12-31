@@ -48,10 +48,11 @@ safe_numeric <- function(x) {
 #' get_available_years()
 get_available_years <- function() {
   # Wyoming data availability:
-  # - PDF Era: 2002-2007 (historical PDFs on edu.wyoming.gov)
+  # - PDF Era: 2000-2007 (historical PDFs on edu.wyoming.gov)
   # - Modern Era: 2008-present (reporting.edu.wyo.gov)
   # Current year data typically available after October (fall collection)
-  2002:2024
+  # Note: PDFs for years before 2000 are not available via current URLs
+  2000:2024
 }
 
 
@@ -59,7 +60,7 @@ get_available_years <- function() {
 #'
 #' Returns the format era identifier for a given school year.
 #' Wyoming has two major format eras:
-#' - "pdf": 2002-2007 (PDF files on edu.wyoming.gov)
+#' - "pdf": 2000-2007 (PDF files on edu.wyoming.gov)
 #' - "modern": 2008-present (reporting.edu.wyo.gov interactive reports)
 #'
 #' @param end_year School year end

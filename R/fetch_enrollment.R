@@ -10,10 +10,10 @@
 #' Fetch Wyoming enrollment data
 #'
 #' Downloads and processes enrollment data from the Wyoming Department of
-#' Education. Supports data from 2002 to present.
+#' Education. Supports data from 2000 to present.
 #'
 #' @param end_year A school year. Year is the end of the academic year - eg 2023-24
-#'   school year is year '2024'. Valid values are 2002-2024.
+#'   school year is year '2024'. Valid values are 2000-2024.
 #' @param tidy If TRUE (default), returns data in long (tidy) format with subgroup
 #'   column. If FALSE, returns wide format.
 #' @param use_cache If TRUE (default), uses locally cached data when available.

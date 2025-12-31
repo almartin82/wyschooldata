@@ -23,16 +23,16 @@ test_that("get_available_years returns valid range", {
 
   expect_true(is.numeric(years))
   expect_true(length(years) > 0)
-  expect_true(min(years) >= 2002)
+  expect_true(min(years) >= 2000)
   expect_true(max(years) <= 2025)
 })
 
 test_that("get_format_era returns correct era", {
   # PDF era
+  expect_equal(get_format_era(2000), "pdf")
   expect_equal(get_format_era(2002), "pdf")
   expect_equal(get_format_era(2005), "pdf")
   expect_equal(get_format_era(2007), "pdf")
-
 
   # Modern era
   expect_equal(get_format_era(2008), "modern")
@@ -41,14 +41,14 @@ test_that("get_format_era returns correct era", {
 })
 
 test_that("fetch_enr validates year parameter", {
-  expect_error(fetch_enr(2000), "end_year must be between")
+  expect_error(fetch_enr(1999), "end_year must be between")
   expect_error(fetch_enr(2030), "end_year must be between")
   expect_error(fetch_enr(1990), "end_year must be between")
 })
 
 test_that("fetch_enr_multi validates year parameters", {
-  expect_error(fetch_enr_multi(c(2000, 2024)), "Invalid years")
-  expect_error(fetch_enr_multi(1990:2000), "Invalid years")
+  expect_error(fetch_enr_multi(c(1999, 2024)), "Invalid years")
+  expect_error(fetch_enr_multi(1990:1999), "Invalid years")
 })
 
 test_that("get_cache_dir returns valid path", {

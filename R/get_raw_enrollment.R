@@ -4,7 +4,7 @@
 #
 # This file contains functions for downloading raw enrollment data from WDE.
 # Data comes from two sources:
-# - PDF files: 2002-2007 (historical PDFs on edu.wyoming.gov)
+# - PDF files: 2000-2007 (historical PDFs on edu.wyoming.gov)
 # - Modern reporting system: 2008-present (reporting.edu.wyo.gov)
 #
 # Wyoming collects enrollment data as of October 1st each school year.
@@ -14,7 +14,7 @@
 #' Download raw enrollment data from WDE
 #'
 #' Downloads school enrollment data from Wyoming Department of Education.
-#' Uses PDF files for 2002-2007 and the modern reporting system for 2008+.
+#' Uses PDF files for 2000-2007 and the modern reporting system for 2008+.
 #'
 #' @param end_year School year end (2023-24 = 2024)
 #' @return Data frame with enrollment data
@@ -47,12 +47,12 @@ get_raw_enr <- function(end_year) {
 }
 
 
-#' Download enrollment data from PDF files (2002-2007)
+#' Download enrollment data from PDF files (2000-2007)
 #'
 #' Wyoming's historical enrollment data is available as PDF files.
 #' This function downloads and parses these PDFs.
 #'
-#' @param end_year School year end (2002-2007)
+#' @param end_year School year end (2000-2007)
 #' @return Data frame with enrollment data
 #' @keywords internal
 download_pdf_era <- function(end_year) {

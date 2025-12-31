@@ -6,7 +6,7 @@ Authors@R:
 Description: Downloads and processes school data from the Wyoming Department of
     Education (WDE). Provides functions for fetching enrollment data from WDE's
     reporting system and transforming it into tidy format for analysis. Supports
-    data from 2002 to present across two format eras: PDF reports (2002-2007) and
+    data from 2000 to present across two format eras: PDF reports (2000-2007) and
     the interactive WDE reporting system (2008+).
 License: MIT + file LICENSE
 Encoding: UTF-8
