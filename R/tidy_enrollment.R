@@ -127,7 +127,25 @@ tidy_enr <- function(df) {
   }
 
   # Combine all tidy data
-  dplyr::bind_rows(tidy_total, tidy_subgroups, tidy_grades) |>
+  result <- dplyr::bind_rows(tidy_total, tidy_subgroups, tidy_grades)
+
+  # Handle case where no data was processed
+  if (nrow(result) == 0 || !"n_students" %in% names(result)) {
+    return(dplyr::tibble(
+      end_year = integer(),
+      type = character(),
+      district_id = character(),
+      campus_id = character(),
+      district_name = character(),
+      campus_name = character(),
+      grade_level = character(),
+      subgroup = character(),
+      n_students = numeric(),
+      pct = numeric()
+    ))
+  }
+
+  result |>
     dplyr::filter(!is.na(n_students))
 }
 
