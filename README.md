@@ -3,11 +3,12 @@
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/almartin82/wyschooldata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/almartin82/wyschooldata/actions/workflows/R-CMD-check.yaml)
+[![Python Tests](https://github.com/almartin82/wyschooldata/actions/workflows/python-test.yaml/badge.svg)](https://github.com/almartin82/wyschooldata/actions/workflows/python-test.yaml)
 <!-- badges: end -->
 
 **[Documentation](https://almartin82.github.io/wyschooldata/)** | [GitHub](https://github.com/almartin82/wyschooldata)
 
-An R package for accessing Wyoming school enrollment data from the Wyoming Department of Education (WDE). **25 years of data** (2000-2024) for every school, district, and the state.
+Fetch and analyze Wyoming school enrollment data from [WDE](https://edu.wyoming.gov/data/) in R or Python. **25 years of data** (2000-2024) for every school, district, and the state.
 
 ## What can you find with wyschooldata?
 
@@ -226,6 +227,8 @@ devtools::install_github("almartin82/wyschooldata")
 
 ## Quick Start
 
+### R
+
 ```r
 library(wyschooldata)
 library(dplyr)
@@ -245,6 +248,30 @@ enr |>
   arrange(desc(n_students)) |>
   select(district_name, n_students) |>
   head(5)
+```
+
+### Python
+
+```python
+import pywyschooldata as wy
+
+# Fetch 2024 data (2023-24 school year)
+enr = wy.fetch_enr(2024)
+
+# Statewide total
+total = enr[(enr['is_state'] == True) &
+            (enr['subgroup'] == 'total_enrollment') &
+            (enr['grade_level'] == 'TOTAL')]['n_students'].sum()
+print(f"{total:,} students")
+#> 94,234 students
+
+# Get multiple years
+enr_multi = wy.fetch_enr_multi([2020, 2021, 2022, 2023, 2024])
+
+# Check available years
+years = wy.get_available_years()
+print(f"Data available: {years['min_year']}-{years['max_year']}")
+#> Data available: 2000-2024
 ```
 
 ## Data Format
