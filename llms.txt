@@ -227,6 +227,18 @@ fetch_enr(2024) |>
 
 ------------------------------------------------------------------------
 
+## Enrollment Visualizations
+
+![Wyoming statewide enrollment
+trends](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/statewide-chart-1.png)
+
+![Top Wyoming
+districts](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/top-districts-chart-1.png)
+
+See the [full
+vignette](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks.html)
+for more insights.
+
 ## Installation
 
 ``` r
@@ -303,17 +315,12 @@ Wyoming has 48 school districts organized by county:
 | Sweetwater County | SD \#1 (Rock Springs), SD \#2 (Green River)        |
 | Teton County      | SD \#1 (Jackson)                                   |
 
-## Part of the 50 State Schooldata Family
+## Part of the State Schooldata Project
 
-This package is part of a family of R packages providing school
-enrollment data for all 50 US states. Each package fetches data directly
-from the state’s Department of Education.
+A simple, consistent interface for accessing state-published school data
+in Python and R.
 
-**See also:**
-[njschooldata](https://github.com/almartin82/njschooldata) - The
-original state schooldata package for New Jersey.
-
-**All packages:**
+**All 50 state packages:**
 [github.com/almartin82](https://github.com/almartin82?tab=repositories&q=schooldata)
 
 ## Author
@@ -358,3 +365,9 @@ Manage locally cached data
 - [`clear_cache()`](https://almartin82.github.io/wyschooldata/reference/clear_cache.md)
   : Clear the wyschooldata cache
 
+# Articles
+
+### All vignettes
+
+- [10 Insights from Wyoming School Enrollment
+  Data](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks.md):
