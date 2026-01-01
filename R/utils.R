@@ -40,6 +40,8 @@ get_available_years <- function() {
   # - Modern Era: 2008-present (reporting.edu.wyo.gov)
   # Current year data typically available after October (fall collection)
   # Note: PDFs for years before 2000 are not available via current URLs
+  # Note: 2025 data may be in reporting system but requires JavaScript
+  # interaction - current scraping approach doesn't work for modern era.
   2000:2024
 }
 
