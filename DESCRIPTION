@@ -1,13 +1,10 @@
 Package: wyschooldata
-Title: Fetch and Process Wyoming School Data
+Title: Wyoming School Data
 Version: 0.1.0
 Authors@R:
     person("Al", "Martin", , "almartin@example.com", role = c("aut", "cre"))
-Description: Downloads and processes school data from the Wyoming Department of
-    Education (WDE). Provides functions for fetching enrollment data from WDE's
-    reporting system and transforming it into tidy format for analysis. Supports
-    data from 2000 to present across two format eras: PDF reports (2000-2007) and
-    the interactive WDE reporting system (2008+).
+Description: A simple, consistent interface for accessing Wyoming
+    school data in R.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
