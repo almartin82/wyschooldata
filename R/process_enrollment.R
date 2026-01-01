@@ -53,7 +53,7 @@ process_enr_pdf <- function(df, end_year) {
   # PDF data typically has school-level data
   # Need to identify district vs school names
 
-  result <- df %>%
+  result <- df |>
     dplyr::mutate(
       end_year = end_year,
       type = "School",
@@ -88,7 +88,7 @@ identify_pdf_hierarchy <- function(df) {
   # - Contains "District Total"
   # - Contains "County"
 
-  df <- df %>%
+  df <- df |>
     dplyr::mutate(
       is_district_row = grepl("(District Total|School District|\\s+SD\\s*#?[0-9]+|County Total)",
                                campus_name, ignore.case = TRUE),
@@ -96,7 +96,7 @@ identify_pdf_hierarchy <- function(df) {
     )
 
   # For rows that are district totals, update type
-  df <- df %>%
+  df <- df |>
     dplyr::mutate(
       type = dplyr::case_when(
         is_county_row ~ "County",
@@ -125,13 +125,13 @@ identify_pdf_hierarchy <- function(df) {
   df$district_name <- district_names
 
   # For district rows, move name to district_name and clear campus_name
-  df <- df %>%
+  df <- df |>
     dplyr::mutate(
       campus_name = dplyr::if_else(type != "School", NA_character_, campus_name)
     )
 
   # Remove helper columns
-  df <- df %>%
+  df <- df |>
     dplyr::select(-is_district_row, -is_county_row)
 
   df
@@ -147,7 +147,7 @@ identify_pdf_hierarchy <- function(df) {
 process_enr_modern <- function(df, end_year) {
 
   # Modern data should already have district/school columns
-  result <- df %>%
+  result <- df |>
     dplyr::mutate(
       end_year = end_year,
       type = "School"
@@ -205,7 +205,7 @@ process_enr_modern <- function(df, end_year) {
 create_district_aggregates <- function(school_df, end_year) {
 
   # Filter to school-level rows only
-  schools <- school_df %>%
+  schools <- school_df |>
     dplyr::filter(type == "School")
 
   if (nrow(schools) == 0) {
@@ -229,12 +229,12 @@ create_district_aggregates <- function(school_df, end_year) {
   sum_cols <- sum_cols[sum_cols %in% names(schools)]
 
   # Group by district and sum
-  districts <- schools %>%
-    dplyr::group_by(district_id, district_name) %>%
+  districts <- schools |>
+    dplyr::group_by(district_id, district_name) |>
     dplyr::summarize(
       dplyr::across(dplyr::all_of(sum_cols), ~sum(.x, na.rm = TRUE)),
       .groups = "drop"
-    ) %>%
+    ) |>
     dplyr::mutate(
       end_year = end_year,
       type = "District",

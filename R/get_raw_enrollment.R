@@ -299,19 +299,10 @@ download_modern_era <- function(end_year) {
 
   }, error = function(e) {
     unlink(tname)
-
-    # Fallback: Use NCES Common Core of Data as alternative source
-    message("  WDE reporting system unavailable, trying NCES CCD fallback...")
-    df <- download_nces_fallback(end_year)
-
-    if (is.null(df) || nrow(df) == 0) {
-      stop(paste("Failed to download data for year", end_year,
-                 "\nError:", e$message,
-                 "\n\nThe WDE reporting system may be temporarily unavailable.",
-                 "Try again later or check https://edu.wyoming.gov/data/"))
-    }
-
-    return(df)
+    stop(paste("Failed to download data for year", end_year,
+               "\nError:", e$message,
+               "\n\nThe WDE reporting system may be temporarily unavailable.",
+               "Try again later or check https://edu.wyoming.gov/data/"))
   })
 
   unlink(tname)
@@ -350,30 +341,6 @@ parse_wde_html_report <- function(html_path, end_year) {
   df <- standardize_modern_columns(df, end_year)
 
   df
-}
-
-
-#' Download NCES CCD fallback data
-#'
-#' Uses NCES Common Core of Data as a fallback source for Wyoming enrollment.
-#' CCD data is comprehensive and reliable but may lag by 1-2 years.
-#'
-#' @param end_year School year end
-#' @return Data frame with enrollment data or NULL
-#' @keywords internal
-download_nces_fallback <- function(end_year) {
-
-  # NCES provides state-level data files
-  # This is a simplified fallback - in production you might use the full NCES API
-
-  message("  Attempting NCES CCD fallback for Wyoming data...")
-
-  # For now, return NULL to trigger the error path
-
-  # In a full implementation, this would download from:
-  # https://nces.ed.gov/ccd/files.asp
-
-  NULL
 }
 
 
