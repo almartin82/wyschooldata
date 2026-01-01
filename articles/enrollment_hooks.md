@@ -31,6 +31,9 @@ state_totals <- enr |>
          pct_change = round(change / lag(n_students) * 100, 2))
 
 state_totals
+#>   end_year n_students  change pct_change
+#> 1     2000     267525      NA         NA
+#> 2     2005      64793 -202732     -75.78
 ```
 
 ``` r
@@ -45,6 +48,8 @@ ggplot(state_totals, aes(x = end_year, y = n_students)) +
     y = "Total Enrollment"
   )
 ```
+
+![](enrollment_hooks_files/figure-html/statewide-chart-1.png)
 
 For context: Denver Public Schools alone serves more students than all
 of Wyoming.
@@ -65,6 +70,8 @@ state_trend <- energy_years |>
   mutate(yoy_change = round((n_students / lag(n_students) - 1) * 100, 1))
 
 state_trend
+#> # A tibble: 0 × 3
+#> # ℹ 3 variables: end_year <int>, n_students <dbl>, yoy_change <dbl>
 ```
 
 The 2015-2020 coal decline hit enrollment hard. Gillette and other
@@ -87,6 +94,8 @@ top_districts <- enr_2024 |>
   select(district_name, n_students)
 
 top_districts
+#> # A tibble: 0 × 2
+#> # ℹ 2 variables: district_name <chr>, n_students <dbl>
 ```
 
 ``` r
@@ -104,6 +113,8 @@ top_districts |>
     y = NULL
   )
 ```
+
+![](enrollment_hooks_files/figure-html/top-districts-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -123,6 +134,8 @@ demographics <- enr_2024 |>
   arrange(desc(n_students))
 
 demographics
+#> # A tibble: 0 × 3
+#> # ℹ 3 variables: subgroup <chr>, n_students <dbl>, pct <dbl>
 ```
 
 ``` r
@@ -140,6 +153,8 @@ demographics |>
     y = NULL
   )
 ```
+
+![](enrollment_hooks_files/figure-html/demographics-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -160,6 +175,8 @@ fremont <- enr_multi |>
   mutate(pct_change = round((total / lag(total) - 1) * 100, 1))
 
 fremont
+#> # A tibble: 0 × 3
+#> # ℹ 3 variables: end_year <int>, total <dbl>, pct_change <dbl>
 ```
 
 ``` r
@@ -174,6 +191,8 @@ ggplot(fremont, aes(x = end_year, y = total)) +
     y = "Total Enrollment"
   )
 ```
+
+![](enrollment_hooks_files/figure-html/regional-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -194,6 +213,8 @@ campbell_summary <- campbell |>
   mutate(pct_change = round((total / lag(total) - 1) * 100, 1))
 
 campbell_summary
+#> # A tibble: 0 × 3
+#> # ℹ 3 variables: end_year <int>, total <dbl>, pct_change <dbl>
 ```
 
 ``` r
@@ -209,6 +230,8 @@ ggplot(campbell_summary, aes(x = end_year, y = total)) +
   )
 ```
 
+![](enrollment_hooks_files/figure-html/campbell-chart-1.png)
+
 ------------------------------------------------------------------------
 
 ## 7. Teton County is the exception: Ski town growth
@@ -223,6 +246,8 @@ teton <- enr_multi |>
   select(end_year, district_name, n_students)
 
 teton
+#> # A tibble: 0 × 3
+#> # ℹ 3 variables: end_year <int>, district_name <chr>, n_students <dbl>
 ```
 
 ``` r
@@ -239,6 +264,8 @@ teton |>
     color = "District"
   )
 ```
+
+![](enrollment_hooks_files/figure-html/growth-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -258,6 +285,10 @@ n_districts <- enr_2024 |>
   )
 
 n_districts
+#> # A tibble: 1 × 3
+#>   n_districts total_students avg_per_district
+#>         <int>          <dbl>            <dbl>
+#> 1           0              0              NaN
 ```
 
 With an average of around 2,000 students per district, Wyoming’s
@@ -285,6 +316,8 @@ school_sizes <- enr_2024 |>
          levels = c("Under 50", "50-99", "100-249", "250-499", "500+")))
 
 school_sizes
+#> # A tibble: 0 × 2
+#> # ℹ 2 variables: size_category <fct>, n_schools <int>
 ```
 
 ------------------------------------------------------------------------
@@ -301,6 +334,8 @@ k_vs_12 <- enr_multi |>
   pivot_wider(names_from = grade_level, values_from = n_students)
 
 k_vs_12
+#> # A tibble: 0 × 1
+#> # ℹ 1 variable: end_year <int>
 ```
 
 When kindergarten classes shrink, elementary, middle, and high schools
