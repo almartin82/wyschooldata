@@ -291,13 +291,11 @@ Wyoming has 48 school districts organized by county:
 | Sweetwater County | SD #1 (Rock Springs), SD #2 (Green River) |
 | Teton County | SD #1 (Jackson) |
 
-## Part of the 50 State Schooldata Family
+## Part of the State Schooldata Project
 
-This package is part of a family of R packages providing school enrollment data for all 50 US states. Each package fetches data directly from the state's Department of Education.
+A simple, consistent interface for accessing state-published school data in Python and R.
 
-**See also:** [njschooldata](https://github.com/almartin82/njschooldata) - The original state schooldata package for New Jersey.
-
-**All packages:** [github.com/almartin82](https://github.com/almartin82?tab=repositories&q=schooldata)
+**All 50 state packages:** [github.com/almartin82](https://github.com/almartin82?tab=repositories&q=schooldata)
 
 ## Author
 
