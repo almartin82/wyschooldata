@@ -1,5 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://almartin82.github.io/wyschooldata/404.html</loc></url>
+<url><loc>https://almartin82.github.io/wyschooldata/CLAUDE.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/LICENSE-text.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/authors.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/index.html</loc></url>
@@ -12,7 +13,6 @@
 <url><loc>https://almartin82.github.io/wyschooldata/reference/create_empty_enrollment_df.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/create_state_aggregate.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/download_modern_era.html</loc></url>
-<url><loc>https://almartin82.github.io/wyschooldata/reference/download_nces_fallback.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/download_pdf_era.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/enr_grade_aggs.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/ensure_column_order.html</loc></url>
