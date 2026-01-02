@@ -44,6 +44,8 @@ def fetch_enr(end_year: int) -> pd.DataFrame:
     pkg = _get_pkg()
     with localconverter(robjects.default_converter + pandas2ri.converter):
         r_df = pkg.fetch_enr(end_year)
+        if isinstance(r_df, pd.DataFrame):
+            return r_df
         return pandas2ri.rpy2py(r_df)
 
 
@@ -70,6 +72,8 @@ def fetch_enr_multi(end_years: list[int]) -> pd.DataFrame:
     with localconverter(robjects.default_converter + pandas2ri.converter):
         r_years = robjects.IntVector(end_years)
         r_df = pkg.fetch_enr_multi(r_years)
+        if isinstance(r_df, pd.DataFrame):
+            return r_df
         return pandas2ri.rpy2py(r_df)
 
 
@@ -97,6 +101,8 @@ def tidy_enr(df: pd.DataFrame) -> pd.DataFrame:
     with localconverter(robjects.default_converter + pandas2ri.converter):
         r_df = pandas2ri.py2rpy(df)
         r_result = pkg.tidy_enr(r_df)
+        if isinstance(r_result, pd.DataFrame):
+            return r_result
         return pandas2ri.rpy2py(r_result)
 
 
@@ -118,6 +124,29 @@ def get_available_years() -> dict:
     pkg = _get_pkg()
     with localconverter(robjects.default_converter + pandas2ri.converter):
         r_result = pkg.get_available_years()
+        # Handle different rpy2 return types
+        if isinstance(r_result, dict):
+            return {
+                "min_year": int(r_result["min_year"]),
+                "max_year": int(r_result["max_year"]),
+            }
+        # Try NamedList / ListVector attribute access
+        if hasattr(r_result, "names") and r_result.names is not None:
+            names = list(r_result.names)
+            values = list(r_result)
+            result_dict = dict(zip(names, values))
+            min_val = result_dict.get("min_year")
+            max_val = result_dict.get("max_year")
+            # Extract scalar from vector if needed
+            if hasattr(min_val, "__getitem__") and len(min_val) > 0:
+                min_val = min_val[0]
+            if hasattr(max_val, "__getitem__") and len(max_val) > 0:
+                max_val = max_val[0]
+            return {
+                "min_year": int(min_val),
+                "max_year": int(max_val),
+            }
+        # Fallback to rx2
         return {
             "min_year": int(r_result.rx2("min_year")[0]),
             "max_year": int(r_result.rx2("max_year")[0]),
