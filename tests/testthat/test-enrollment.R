@@ -24,7 +24,7 @@ test_that("get_available_years returns valid range", {
   expect_true(is.numeric(years))
   expect_true(length(years) > 0)
   expect_true(min(years) >= 2000)
-  expect_true(max(years) <= 2025)
+  expect_true(max(years) <= 2024)
 })
 
 test_that("get_format_era returns correct era", {
