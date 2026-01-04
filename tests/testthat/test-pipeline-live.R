@@ -227,4 +227,3 @@ test_that("Cache functions exist and work", {
     skip("Cache functions may not be implemented")
   })
 })
-
