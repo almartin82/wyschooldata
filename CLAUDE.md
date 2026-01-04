@@ -7,12 +7,45 @@
 
 # Claude Code Instructions
 
-## Git Commits and PRs
-- NEVER reference Claude, Claude Code, or AI assistance in commit messages
-- NEVER reference Claude, Claude Code, or AI assistance in PR descriptions
-- NEVER add Co-Authored-By lines mentioning Claude or Anthropic
-- Keep commit messages focused on what changed, not how it was written
+### GIT COMMIT POLICY
+- Commits are allowed
+- NO Claude Code attribution, NO Co-Authored-By trailers, NO emojis
+- Write normal commit messages as if a human wrote them
 
+---
+
+## Local Testing Before PRs (REQUIRED)
+
+**PRs will not be merged until CI passes.** Run these checks locally BEFORE opening a PR:
+
+### CI Checks That Must Pass
+
+| Check | Local Command | What It Tests |
+|-------|---------------|---------------|
+| R-CMD-check | `devtools::check()` | Package builds, tests pass, no errors/warnings |
+| Python tests | `pytest tests/test_pywyschooldata.py -v` | Python wrapper works correctly |
+| pkgdown | `pkgdown::build_site()` | Documentation and vignettes render |
+
+### Quick Commands
+
+```r
+# R package check (required)
+devtools::check()
+
+# Python tests (required)
+system("pip install -e ./pywyschooldata && pytest tests/test_pywyschooldata.py -v")
+
+# pkgdown build (required)
+pkgdown::build_site()
+```
+
+### Pre-PR Checklist
+
+Before opening a PR, verify:
+- [ ] `devtools::check()` — 0 errors, 0 warnings
+- [ ] `pytest tests/test_pywyschooldata.py` — all tests pass
+- [ ] `pkgdown::build_site()` — builds without errors
+- [ ] Vignettes render (no `eval=FALSE` hacks)
 
 ---
 
@@ -36,7 +69,6 @@ devtools::test(filter = "pipeline-live")
 ```
 
 See `state-schooldata/CLAUDE.md` for complete testing framework documentation.
-
 
 ---
 
