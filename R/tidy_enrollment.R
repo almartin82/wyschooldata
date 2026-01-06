@@ -141,11 +141,17 @@ tidy_enr <- function(df) {
       grade_level = character(),
       subgroup = character(),
       n_students = numeric(),
-      pct = numeric()
+      pct = numeric(),
+      aggregation_flag = character()
     ))
   }
 
   result |>
+    dplyr::mutate(aggregation_flag = dplyr::case_when(
+      !is.na(district_id) & !is.na(campus_id) & district_id != "" & campus_id != "" ~ "campus",
+      !is.na(district_id) & district_id != "" ~ "district",
+      TRUE ~ "state"
+    )) |>
     dplyr::filter(!is.na(n_students))
 }
 
