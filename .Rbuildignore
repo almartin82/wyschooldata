@@ -10,4 +10,7 @@
 ^doc$
 ^Meta$
 ^CLAUDE\.md$
+^TODO\.md$
+^EXPANSION\.md$
+^check-output\.log$
 ^py.*schooldata$
