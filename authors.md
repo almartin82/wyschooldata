@@ -2,7 +2,7 @@
 
 ## Authors
 
-- **Al Martin**. Author, maintainer.
+- **Andrew Martin**. Author, maintainer.
 
 ## Citation
 
@@ -14,7 +14,7 @@ Martin A (2026). *wyschooldata: Wyoming School Data*. R package version
 
     @Manual{,
       title = {wyschooldata: Wyoming School Data},
-      author = {Al Martin},
+      author = {Andrew Martin},
       year = {2026},
       note = {R package version 0.1.0},
       url = {https://almartin82.github.io/wyschooldata/},

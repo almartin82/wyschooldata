@@ -64,182 +64,9 @@
 <div class="section level2">
 <h2 id="what-can-you-find-with-wyschooldata">What can you find with wyschooldata?<a class="anchor" aria-label="anchor" href="#what-can-you-find-with-wyschooldata"></a>
 </h2>
-<p>Wyoming educates <strong>94,000 students</strong> across 48 school districts, the smallest K-12 system in the continental United States. From the energy boomtowns of Campbell County to the ski resorts of Teton County, here are ten stories hiding in the data:</p>
+<p>Wyoming educates students across 48 school districts, the smallest K-12 system in the continental United States. From the energy boomtowns of Campbell County to the ski resorts of Teton County, explore enrollment trends and regional patterns across 25 years of data (2000-2024).</p>
+<p>For detailed insights and examples, see the <a href="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks.html">enrollment hooks vignette</a>.</p>
 <hr>
-<div class="section level3">
-<h3 id="id_1-americas-smallest-state-school-system">1. America’s Smallest State School System<a class="anchor" aria-label="anchor" href="#id_1-americas-smallest-state-school-system"></a>
-</h3>
-<p>Wyoming has fewer K-12 students than many single school districts. <strong>Fairfax County, Virginia</strong> alone has twice as many students as the entire state of Wyoming.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://almartin82.github.io/wyschooldata/">wyschooldata</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Wyoming's total enrollment</span></span>
-<span><span class="fu"><a href="reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   end_year n_students</span></span>
-<span><span class="co">#&gt; 1     2024      94234</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_2-the-energy-rollercoaster">2. The Energy Rollercoaster<a class="anchor" aria-label="anchor" href="#id_2-the-energy-rollercoaster"></a>
-</h3>
-<p><strong>Campbell County</strong> (Gillette) has the most volatile enrollment in America, rising and falling with coal and oil prices. It gained 2,000 students during the 2010s energy boom, then lost them when it bust.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2008</span>, <span class="fl">2014</span>, <span class="fl">2020</span>, <span class="fl">2024</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Campbell"</span>, <span class="va">district_name</span><span class="op">)</span>,</span>
-<span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   end_year n_students</span></span>
-<span><span class="co">#&gt; 1     2008       8234</span></span>
-<span><span class="co">#&gt; 2     2014       9456</span></span>
-<span><span class="co">#&gt; 3     2020       8567</span></span>
-<span><span class="co">#&gt; 4     2024       7845</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_3-the-teton-paradox">3. The Teton Paradox<a class="anchor" aria-label="anchor" href="#id_3-the-teton-paradox"></a>
-</h3>
-<p><strong>Teton County</strong> (Jackson Hole) is America’s wealthiest county, but its school enrollment has <strong>dropped 15%</strong> since 2015 as housing costs push families out.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2015</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Teton"</span>, <span class="va">district_name</span><span class="op">)</span>,</span>
-<span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   end_year n_students</span></span>
-<span><span class="co">#&gt; 1     2015       2456</span></span>
-<span><span class="co">#&gt; 2     2018       2345</span></span>
-<span><span class="co">#&gt; 3     2021       2123</span></span>
-<span><span class="co">#&gt; 4     2024       2089</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_4-cheyenne-holds-steady">4. Cheyenne Holds Steady<a class="anchor" aria-label="anchor" href="#id_4-cheyenne-holds-steady"></a>
-</h3>
-<p><strong>Laramie County SD #1</strong> (Cheyenne) is Wyoming’s largest district, and unlike most of the state, has held remarkably steady at 14,000 students.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">2015</span>, <span class="fl">2020</span>, <span class="fl">2024</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Laramie County SD #1"</span>, <span class="va">district_name</span><span class="op">)</span>,</span>
-<span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   end_year n_students</span></span>
-<span><span class="co">#&gt; 1     2010      14234</span></span>
-<span><span class="co">#&gt; 2     2015      14456</span></span>
-<span><span class="co">#&gt; 3     2020      14123</span></span>
-<span><span class="co">#&gt; 4     2024      14345</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_5-the-wind-river-reservation">5. The Wind River Reservation<a class="anchor" aria-label="anchor" href="#id_5-the-wind-river-reservation"></a>
-</h3>
-<p>Wyoming’s most diverse region is the <strong>Wind River Reservation</strong>, home to the Eastern Shoshone and Northern Arapaho tribes. Fremont County districts serve significant Native American populations.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Fremont"</span>, <span class="va">district_name</span><span class="op">)</span>,</span>
-<span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
-<span><span class="co">#&gt;               district_name n_students</span></span>
-<span><span class="co">#&gt; 1   Fremont County SD #1        1234</span></span>
-<span><span class="co">#&gt; 2   Fremont County SD #2         234</span></span>
-<span><span class="co">#&gt; 3   Fremont County SD #6         345</span></span>
-<span><span class="co">#&gt; 4   Fremont County SD #14       1123</span></span>
-<span><span class="co">#&gt; 5   Fremont County SD #21        456</span></span>
-<span><span class="co">#&gt; 6   Fremont County SD #24        234</span></span>
-<span><span class="co">#&gt; 7   Fremont County SD #25       3234</span></span>
-<span><span class="co">#&gt; 8   Fremont County SD #38        678</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_6-covids-modest-impact">6. COVID’s Modest Impact<a class="anchor" aria-label="anchor" href="#id_6-covids-modest-impact"></a>
-</h3>
-<p>Unlike most states, Wyoming’s COVID enrollment drop was <strong>only 3%</strong>, perhaps because rural districts stayed open or families had fewer alternatives.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2019</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   end_year n_students</span></span>
-<span><span class="co">#&gt; 1     2019      95234</span></span>
-<span><span class="co">#&gt; 2     2020      94567</span></span>
-<span><span class="co">#&gt; 3     2021      92345</span></span>
-<span><span class="co">#&gt; 4     2022      93123</span></span>
-<span><span class="co">#&gt; 5     2023      93567</span></span>
-<span><span class="co">#&gt; 6     2024      94234</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_7-the-micro-district-challenge">7. The Micro-District Challenge<a class="anchor" aria-label="anchor" href="#id_7-the-micro-district-challenge"></a>
-</h3>
-<p>Wyoming has <strong>12 districts with fewer than 300 students</strong>. Ten Sleep has 89 students. Meeteetse has 92.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">300</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
-<span><span class="co">#&gt;              district_name n_students</span></span>
-<span><span class="co">#&gt; 1   Washakie County SD #2         89</span></span>
-<span><span class="co">#&gt; 2     Park County SD #16          92</span></span>
-<span><span class="co">#&gt; 3    Niobrara County SD #1       123</span></span>
-<span><span class="co">#&gt; 4    Platte County SD #2         134</span></span>
-<span><span class="co">#&gt; 5    Crook County SD #1          156</span></span>
-<span><span class="co">#&gt; ...</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_8-hispanic-growth-in-agriculture">8. Hispanic Growth in Agriculture<a class="anchor" aria-label="anchor" href="#id_8-hispanic-growth-in-agriculture"></a>
-</h3>
-<p>Wyoming’s Hispanic population has grown from <strong>8% to 14%</strong> since 2008, concentrated in agricultural areas like Goshen and Platte counties.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2008</span>, <span class="fl">2016</span>, <span class="fl">2024</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
-<span>         <span class="va">subgroup</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"hispanic"</span>, <span class="st">"native_american"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">subgroup</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   end_year       subgroup n_students   pct</span></span>
-<span><span class="co">#&gt; 1     2008          white      81234  0.85</span></span>
-<span><span class="co">#&gt; 2     2008       hispanic       7456  0.08</span></span>
-<span><span class="co">#&gt; 3     2008 native_american      3234  0.03</span></span>
-<span><span class="co">#&gt; 4     2024          white      74567  0.79</span></span>
-<span><span class="co">#&gt; 5     2024       hispanic      13234  0.14</span></span>
-<span><span class="co">#&gt; 6     2024 native_american      2890  0.03</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_9-kindergarten-stability">9. Kindergarten Stability<a class="anchor" aria-label="anchor" href="#id_9-kindergarten-stability"></a>
-</h3>
-<p>Unlike most states, Wyoming kindergarten enrollment has been <strong>remarkably stable</strong>, suggesting births have plateaued rather than declined.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2015</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"K"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   end_year n_students</span></span>
-<span><span class="co">#&gt; 1     2015       6823</span></span>
-<span><span class="co">#&gt; 2     2018       6745</span></span>
-<span><span class="co">#&gt; 3     2021       6534</span></span>
-<span><span class="co">#&gt; 4     2024       6678</span></span></code></pre></div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_10-48-districts-23-counties">10. 48 Districts, 23 Counties<a class="anchor" aria-label="anchor" href="#id_10-48-districts-23-counties"></a>
-</h3>
-<p>Wyoming organizes schools by <strong>county</strong>, with each county having between 1 and 8 school districts. Fremont County has 8 districts; most have just 1 or 2.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># District count by county pattern</span></span>
-<span><span class="fu"><a href="reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>county <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">" County SD.*"</span>, <span class="st">""</span>, <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">county</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>n_districts <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n_districts</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        county n_districts</span></span>
-<span><span class="co">#&gt; 1     Fremont           8</span></span>
-<span><span class="co">#&gt; 2    Big Horn           4</span></span>
-<span><span class="co">#&gt; 3    Sheridan           3</span></span>
-<span><span class="co">#&gt; 4    Sublette           2</span></span>
-<span><span class="co">#&gt; 5 Sweetwater           2</span></span></code></pre></div>
-<hr>
-</div>
 </div>
 <div class="section level2">
 <h2 id="enrollment-visualizations">Enrollment Visualizations<a class="anchor" aria-label="anchor" href="#enrollment-visualizations"></a>
@@ -251,7 +78,7 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"almartin82/wyschooldata"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -261,7 +88,7 @@
 <div class="section level3">
 <h3 id="r">R<a class="anchor" aria-label="anchor" href="#r"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://almartin82.github.io/wyschooldata/">wyschooldata</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
@@ -284,25 +111,25 @@
 <div class="section level3">
 <h3 id="python">Python<a class="anchor" aria-label="anchor" href="#python"></a>
 </h3>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="im">import</span> pywyschooldata <span class="im">as</span> wy</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co"># Fetch 2024 data (2023-24 school year)</span></span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>enr <span class="op">=</span> wy.fetch_enr(<span class="dv">2024</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co"># Statewide total</span></span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>total <span class="op">=</span> enr[(enr[<span class="st">'is_state'</span>] <span class="op">==</span> <span class="va">True</span>) <span class="op">&amp;</span></span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>            (enr[<span class="st">'subgroup'</span>] <span class="op">==</span> <span class="st">'total_enrollment'</span>) <span class="op">&amp;</span></span>
-<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>            (enr[<span class="st">'grade_level'</span>] <span class="op">==</span> <span class="st">'TOTAL'</span>)][<span class="st">'n_students'</span>].<span class="bu">sum</span>()</span>
-<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>total<span class="sc">:,}</span><span class="ss"> students"</span>)</span>
-<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; 94,234 students</span></span>
-<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a></span>
-<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co"># Get multiple years</span></span>
-<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>enr_multi <span class="op">=</span> wy.fetch_enr_multi([<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>])</span>
-<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a></span>
-<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co"># Check available years</span></span>
-<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a>years <span class="op">=</span> wy.get_available_years()</span>
-<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data available: </span><span class="sc">{</span>years[<span class="st">'min_year'</span>]<span class="sc">}</span><span class="ss">-</span><span class="sc">{</span>years[<span class="st">'max_year'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt; Data available: 2000-2024</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="im">import</span> pywyschooldata <span class="im">as</span> wy</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co"># Fetch 2024 data (2023-24 school year)</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>enr <span class="op">=</span> wy.fetch_enr(<span class="dv">2024</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co"># Statewide total</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>total <span class="op">=</span> enr[(enr[<span class="st">'is_state'</span>] <span class="op">==</span> <span class="va">True</span>) <span class="op">&amp;</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>            (enr[<span class="st">'subgroup'</span>] <span class="op">==</span> <span class="st">'total_enrollment'</span>) <span class="op">&amp;</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>            (enr[<span class="st">'grade_level'</span>] <span class="op">==</span> <span class="st">'TOTAL'</span>)][<span class="st">'n_students'</span>].<span class="bu">sum</span>()</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>total<span class="sc">:,}</span><span class="ss"> students"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 94,234 students</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co"># Get multiple years</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>enr_multi <span class="op">=</span> wy.fetch_enr_multi([<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>])</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co"># Check available years</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>years <span class="op">=</span> wy.get_available_years()</span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data available: </span><span class="sc">{</span>years[<span class="st">'min_year'</span>]<span class="sc">}</span><span class="ss">-</span><span class="sc">{</span>years[<span class="st">'max_year'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; Data available: 2000-2024</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -469,7 +296,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Al Martin <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Andrew Martin <br><small class="roles"> Author, maintainer </small>   </li>
 </ul>
 </div>
 
@@ -487,7 +314,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Al Martin.</p>
+  <p>Developed by Andrew Martin.</p>
 </div>
 
 <div class="pkgdown-footer-right">
