@@ -2,7 +2,9 @@ Package: wyschooldata
 Title: Wyoming School Data
 Version: 0.1.0
 Authors@R:
-    person("Al", "Martin", , "almartin@example.com", role = c("aut", "cre"))
+    person("Andrew", "Martin", , "almartin@gmail.com", role = c("aut", "cre"))
+Author: Andrew Martin [aut, cre]
+Maintainer: Andrew Martin <almartin@gmail.com>
 Description: A simple, consistent interface for accessing Wyoming
     school data in Python and R.
 License: MIT + file LICENSE
