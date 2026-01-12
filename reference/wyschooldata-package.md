@@ -84,4 +84,4 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Al Martin <almartin@example.com>
+**Maintainer**: Andrew Martin <almartin@gmail.com>

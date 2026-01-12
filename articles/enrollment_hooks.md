@@ -62,7 +62,7 @@ Wyoming’s coal, oil, and gas economy creates enrollment volatility. When
 energy prices rise, workers flood in; when they crash, families leave.
 
 ``` r
-energy_years <- fetch_enr_multi(2010:2024)
+energy_years <- fetch_enr_multi(2010:2024, use_cache = TRUE)
 
 state_trend <- energy_years |>
   filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
@@ -85,7 +85,7 @@ Casper (Natrona County) and Cheyenne (Laramie County) together serve
 nearly 40% of Wyoming’s students.
 
 ``` r
-enr_2024 <- fetch_enr(2024)
+enr_2024 <- fetch_enr(2024, use_cache = TRUE)
 
 top_districts <- enr_2024 |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
@@ -165,7 +165,7 @@ Riverton, and the Wind River Reservation, have distinct enrollment
 patterns.
 
 ``` r
-enr_multi <- fetch_enr_multi(2015:2024)
+enr_multi <- fetch_enr_multi(2015:2024, use_cache = TRUE)
 
 fremont <- enr_multi |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
