@@ -51,6 +51,18 @@ reference:
   - cache_status
   - clear_cache
 
+articles:
+- title: Getting Started
+  navbar: ~
+  contents:
+  - enrollment_hooks
+- title: internal
+  contents:
+  - starts_with("CLAUDE")
+  - starts_with("EXPANSION")
+  - starts_with("TODO")
+  - starts_with("PRD")
+
 footer:
   structure:
     left: developed_by

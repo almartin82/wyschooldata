@@ -323,3 +323,11 @@ These patterns reflect Wyoming's unique position as America's least populous sta
 ---
 
 *Data sourced from the Wyoming Department of Education [edu.wyoming.gov](https://edu.wyoming.gov/).*
+
+---
+
+## Session Info
+
+```{r session-info}
+sessionInfo()
+```
