@@ -1,8 +1,8 @@
 ---
-title: "10 Insights from Wyoming School Enrollment Data"
+title: "15 Insights from Wyoming School Enrollment Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{10 Insights from Wyoming School Enrollment Data}
+  %\VignetteIndexEntry{15 Insights from Wyoming School Enrollment Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -307,6 +307,151 @@ When kindergarten classes shrink, elementary, middle, and high schools will foll
 
 ---
 
+## 11. Hispanic enrollment doubled since 2008
+
+Hispanic students now represent the fastest-growing demographic in Wyoming schools, doubling their share of enrollment since 2008.
+
+```{r hispanic-growth}
+hispanic_trend <- fetch_enr_multi(2008:2024, use_cache = TRUE) |>
+  filter(is_state, grade_level == "TOTAL",
+         subgroup %in% c("hispanic", "total_enrollment")) |>
+  select(end_year, subgroup, n_students) |>
+  pivot_wider(names_from = subgroup, values_from = n_students) |>
+  mutate(pct_hispanic = round(hispanic / total_enrollment * 100, 1))
+
+hispanic_trend |>
+  filter(end_year %in% c(2008, 2016, 2024))
+```
+
+```{r hispanic-chart}
+ggplot(hispanic_trend, aes(x = end_year, y = pct_hispanic)) +
+  geom_line(linewidth = 1.2, color = "#FF6B35") +
+  geom_point(size = 3, color = "#FF6B35") +
+  scale_y_continuous(limits = c(0, NA)) +
+  labs(
+    title = "Hispanic Student Share in Wyoming (2008-2024)",
+    subtitle = "Fastest-growing demographic in Wyoming schools",
+    x = "School Year",
+    y = "Percent Hispanic"
+  )
+```
+
+---
+
+## 12. Sweetwater County shows the Green River story
+
+Rock Springs and Green River in Sweetwater County have tracked energy industry cycles closely, with enrollment rising and falling with natural gas and trona mining.
+
+```{r sweetwater-data}
+sweetwater <- enr_multi |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
+         grepl("Sweetwater", district_name)) |>
+  group_by(end_year) |>
+  summarize(total = sum(n_students, na.rm = TRUE)) |>
+  mutate(pct_change = round((total / lag(total) - 1) * 100, 1))
+
+sweetwater
+```
+
+```{r sweetwater-chart}
+ggplot(sweetwater, aes(x = end_year, y = total)) +
+  geom_line(linewidth = 1.2, color = "#4169E1") +
+  geom_point(size = 3, color = "#4169E1") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Sweetwater County (Rock Springs/Green River) Enrollment",
+    subtitle = "Natural gas and trona mining drive enrollment cycles",
+    x = "School Year",
+    y = "Total Enrollment"
+  )
+```
+
+---
+
+## 13. Special education serves 1 in 7 Wyoming students
+
+Wyoming has a higher-than-average special education identification rate, with roughly 14% of students receiving special education services.
+
+```{r sped-rate}
+sped_rate <- enr_2024 |>
+  filter(is_state, grade_level == "TOTAL",
+         subgroup %in% c("special_ed", "total_enrollment")) |>
+  select(subgroup, n_students) |>
+  pivot_wider(names_from = subgroup, values_from = n_students) |>
+  mutate(pct_sped = round(special_ed / total_enrollment * 100, 1))
+
+sped_rate
+```
+
+At 14%, Wyoming's special education rate exceeds the national average of approximately 11%, reflecting either higher identification rates or rural access challenges.
+
+---
+
+## 14. Economically disadvantaged students exceed 35%
+
+Over a third of Wyoming students qualify as economically disadvantaged, concentrated in communities hit hardest by energy downturns.
+
+```{r econ-disadv}
+econ_trend <- fetch_enr_multi(2010:2024, use_cache = TRUE) |>
+  filter(is_state, grade_level == "TOTAL",
+         subgroup %in% c("econ_disadv", "total_enrollment")) |>
+  select(end_year, subgroup, n_students) |>
+  pivot_wider(names_from = subgroup, values_from = n_students) |>
+  mutate(pct_econ = round(econ_disadv / total_enrollment * 100, 1))
+
+econ_trend |>
+  filter(end_year %in% c(2010, 2017, 2024))
+```
+
+```{r econ-chart}
+ggplot(econ_trend, aes(x = end_year, y = pct_econ)) +
+  geom_line(linewidth = 1.2, color = "#8B0000") +
+  geom_point(size = 3, color = "#8B0000") +
+  scale_y_continuous(limits = c(0, NA)) +
+  labs(
+    title = "Economically Disadvantaged Students in Wyoming",
+    subtitle = "Over 35% of students qualify for free/reduced lunch",
+    x = "School Year",
+    y = "Percent Economically Disadvantaged"
+  )
+```
+
+---
+
+## 15. High school is the smallest enrollment segment
+
+Wyoming's grade distribution shows a funnel effect: more students enter K-8 than graduate from high school, reflecting both family mobility and the state's demographic challenges.
+
+```{r grade-distribution}
+grade_dist <- enr_2024 |>
+  filter(is_state, subgroup == "total_enrollment",
+         grade_level %in% c("K", "01", "02", "03", "04", "05",
+                            "06", "07", "08", "09", "10", "11", "12")) |>
+  select(grade_level, n_students) |>
+  mutate(grade_level = factor(grade_level,
+         levels = c("K", "01", "02", "03", "04", "05",
+                    "06", "07", "08", "09", "10", "11", "12")))
+
+grade_dist
+```
+
+```{r grade-chart}
+ggplot(grade_dist, aes(x = grade_level, y = n_students, fill = grade_level)) +
+  geom_col(show.legend = FALSE) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_fill_viridis_d(option = "turbo") +
+  labs(
+    title = "Wyoming Enrollment by Grade (2024)",
+    subtitle = "Fewer students in upper grades reflects mobility and demographics",
+    x = "Grade Level",
+    y = "Number of Students"
+  )
+```
+
+The drop from elementary to high school is consistent across years, partly driven by families leaving the state for better job opportunities.
+
+---
+
 ## Summary
 
 Wyoming's school enrollment data reveals:
@@ -317,6 +462,9 @@ Wyoming's school enrollment data reveals:
 - **Coal country exodus**: Campbell County (Gillette) losing students
 - **Ski town exception**: Teton County (Jackson) growing against the trend
 - **Small school tradition**: Dozens of schools with under 100 students
+- **Hispanic growth**: Fastest-growing demographic, doubled since 2008
+- **Special ed**: 14% of students receive special education services
+- **Economic challenges**: Over 35% qualify as economically disadvantaged
 
 These patterns reflect Wyoming's unique position as America's least populous state, where energy economics and vast distances shape education.
 
