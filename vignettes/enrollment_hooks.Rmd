@@ -1,8 +1,8 @@
 ---
-title: "10 Insights from Wyoming School Enrollment Data"
+title: "15 Insights from Wyoming School Enrollment Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{10 Insights from Wyoming School Enrollment Data}
+  %\VignetteIndexEntry{15 Insights from Wyoming School Enrollment Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -307,6 +307,165 @@ When kindergarten classes shrink, elementary, middle, and high schools will foll
 
 ---
 
+## 11. Hispanic enrollment is growing across Wyoming
+
+Wyoming's Hispanic population has grown steadily, reshaping school demographics in communities from Cheyenne to Rock Springs.
+
+```{r hispanic-trend}
+hispanic_trend <- enr_multi |>
+  filter(is_state, subgroup == "hispanic", grade_level == "TOTAL") |>
+  select(end_year, n_students) |>
+  mutate(yoy_change = round((n_students / lag(n_students) - 1) * 100, 1))
+
+hispanic_trend
+```
+
+```{r hispanic-chart}
+ggplot(hispanic_trend, aes(x = end_year, y = n_students)) +
+  geom_line(linewidth = 1.2, color = "#E69F00") +
+  geom_point(size = 3, color = "#E69F00") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Hispanic Student Enrollment in Wyoming (2015-2024)",
+    subtitle = "Steady growth reshaping school demographics statewide",
+    x = "School Year",
+    y = "Hispanic Students"
+  )
+```
+
+---
+
+## 12. Sweetwater County: Rock Springs and Green River diverge
+
+Sweetwater County's two districts -- Rock Springs (SD #1) and Green River (SD #2) -- tell different stories about energy-dependent communities.
+
+```{r sweetwater-data}
+sweetwater <- enr_multi |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
+         grepl("Sweetwater", district_name)) |>
+  select(end_year, district_name, n_students)
+
+sweetwater
+```
+
+```{r sweetwater-chart}
+sweetwater |>
+  ggplot(aes(x = end_year, y = n_students, color = district_name)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Sweetwater County Districts (2015-2024)",
+    subtitle = "Rock Springs and Green River: two towns, two trajectories",
+    x = "School Year",
+    y = "Enrollment",
+    color = "District"
+  )
+```
+
+---
+
+## 13. Economically disadvantaged students across Wyoming
+
+The share of students qualifying as economically disadvantaged reveals which communities face the greatest financial pressures.
+
+```{r econ-disadv-data}
+econ <- enr_2024 |>
+  filter(is_district, grade_level == "TOTAL",
+         subgroup %in% c("total_enrollment", "econ_disadv")) |>
+  select(district_name, subgroup, n_students) |>
+  pivot_wider(names_from = subgroup, values_from = n_students) |>
+  mutate(pct_econ_disadv = round(econ_disadv / total_enrollment * 100, 1)) |>
+  filter(!is.na(pct_econ_disadv)) |>
+  arrange(desc(pct_econ_disadv)) |>
+  head(10)
+
+econ
+```
+
+```{r econ-disadv-chart}
+econ |>
+  mutate(district_name = forcats::fct_reorder(district_name, pct_econ_disadv)) |>
+  ggplot(aes(x = pct_econ_disadv, y = district_name, fill = pct_econ_disadv)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = paste0(pct_econ_disadv, "%")), hjust = -0.1) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.15))) +
+  scale_fill_gradient(low = "#56B4E9", high = "#D55E00") +
+  labs(
+    title = "Highest Economically Disadvantaged Rates by District (2024)",
+    subtitle = "Reservation and rural districts face greatest financial pressure",
+    x = "% Economically Disadvantaged",
+    y = NULL
+  )
+```
+
+---
+
+## 14. Grade-level enrollment reveals Wyoming's demographic pipeline
+
+Comparing enrollment by individual grade shows whether the student population is growing or shrinking from bottom to top.
+
+```{r grade-level-data}
+grade_enr <- enr_2024 |>
+  filter(is_state, subgroup == "total_enrollment",
+         grade_level %in% c("K", "01", "02", "03", "04", "05",
+                            "06", "07", "08", "09", "10", "11", "12")) |>
+  select(grade_level, n_students) |>
+  mutate(grade_level = factor(grade_level,
+         levels = c("K", "01", "02", "03", "04", "05",
+                    "06", "07", "08", "09", "10", "11", "12")))
+
+grade_enr
+```
+
+```{r grade-level-chart}
+ggplot(grade_enr, aes(x = grade_level, y = n_students, fill = grade_level)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = scales::comma(n_students)), vjust = -0.3, size = 3) +
+  scale_y_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.1))) +
+  scale_fill_viridis_d(option = "viridis") +
+  labs(
+    title = "Wyoming Enrollment by Grade Level (2024)",
+    subtitle = "Grade-by-grade snapshot of the K-12 pipeline",
+    x = "Grade Level",
+    y = "Number of Students"
+  )
+```
+
+---
+
+## 15. The smallest districts: One-school towns keeping Wyoming educated
+
+Many Wyoming districts serve fewer than 200 students total, keeping schools open in remote ranching communities where the nearest neighbor might be miles away.
+
+```{r smallest-districts-data}
+smallest <- enr_2024 |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  arrange(n_students) |>
+  head(10) |>
+  select(district_name, n_students)
+
+smallest
+```
+
+```{r smallest-districts-chart}
+smallest |>
+  mutate(district_name = forcats::fct_reorder(district_name, n_students)) |>
+  ggplot(aes(x = n_students, y = district_name, fill = district_name)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = scales::comma(n_students)), hjust = -0.1) +
+  scale_x_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.2))) +
+  scale_fill_viridis_d(option = "mako", begin = 0.3, end = 0.8) +
+  labs(
+    title = "Wyoming's Smallest School Districts (2024)",
+    subtitle = "One-school towns keeping education local in the rural West",
+    x = "Number of Students",
+    y = NULL
+  )
+```
+
+---
+
 ## Summary
 
 Wyoming's school enrollment data reveals:
@@ -317,6 +476,9 @@ Wyoming's school enrollment data reveals:
 - **Coal country exodus**: Campbell County (Gillette) losing students
 - **Ski town exception**: Teton County (Jackson) growing against the trend
 - **Small school tradition**: Dozens of schools with under 100 students
+- **Growing diversity**: Hispanic enrollment rising across the state
+- **Economic disparities**: Reservation and rural districts face highest poverty rates
+- **Tiny districts**: Some districts serve fewer than 200 students across vast geography
 
 These patterns reflect Wyoming's unique position as America's least populous state, where energy economics and vast distances shape education.
 
