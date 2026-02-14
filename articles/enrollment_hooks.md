@@ -31,9 +31,6 @@ state_totals <- enr |>
          pct_change = round(change / lag(n_students) * 100, 2))
 
 state_totals
-#>   end_year n_students  change pct_change
-#> 1     2000     267525      NA         NA
-#> 2     2005      64793 -202732     -75.78
 ```
 
 ``` r
@@ -48,8 +45,6 @@ ggplot(state_totals, aes(x = end_year, y = n_students)) +
     y = "Total Enrollment"
   )
 ```
-
-![](enrollment_hooks_files/figure-html/statewide-chart-1.png)
 
 For context: Denver Public Schools alone serves more students than all
 of Wyoming.
@@ -70,8 +65,6 @@ state_trend <- energy_years |>
   mutate(yoy_change = round((n_students / lag(n_students) - 1) * 100, 1))
 
 state_trend
-#> # A tibble: 0 × 3
-#> # ℹ 3 variables: end_year <int>, n_students <dbl>, yoy_change <dbl>
 ```
 
 The 2015-2020 coal decline hit enrollment hard. Gillette and other
@@ -94,8 +87,6 @@ top_districts <- enr_2024 |>
   select(district_name, n_students)
 
 top_districts
-#> # A tibble: 0 × 2
-#> # ℹ 2 variables: district_name <chr>, n_students <dbl>
 ```
 
 ``` r
@@ -113,8 +104,6 @@ top_districts |>
     y = NULL
   )
 ```
-
-![](enrollment_hooks_files/figure-html/top-districts-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -134,8 +123,6 @@ demographics <- enr_2024 |>
   arrange(desc(n_students))
 
 demographics
-#> # A tibble: 0 × 3
-#> # ℹ 3 variables: subgroup <chr>, n_students <dbl>, pct <dbl>
 ```
 
 ``` r
@@ -153,8 +140,6 @@ demographics |>
     y = NULL
   )
 ```
-
-![](enrollment_hooks_files/figure-html/demographics-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -175,8 +160,6 @@ fremont <- enr_multi |>
   mutate(pct_change = round((total / lag(total) - 1) * 100, 1))
 
 fremont
-#> # A tibble: 0 × 3
-#> # ℹ 3 variables: end_year <int>, total <dbl>, pct_change <dbl>
 ```
 
 ``` r
@@ -191,8 +174,6 @@ ggplot(fremont, aes(x = end_year, y = total)) +
     y = "Total Enrollment"
   )
 ```
-
-![](enrollment_hooks_files/figure-html/regional-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -213,8 +194,6 @@ campbell_summary <- campbell |>
   mutate(pct_change = round((total / lag(total) - 1) * 100, 1))
 
 campbell_summary
-#> # A tibble: 0 × 3
-#> # ℹ 3 variables: end_year <int>, total <dbl>, pct_change <dbl>
 ```
 
 ``` r
@@ -230,8 +209,6 @@ ggplot(campbell_summary, aes(x = end_year, y = total)) +
   )
 ```
 
-![](enrollment_hooks_files/figure-html/campbell-chart-1.png)
-
 ------------------------------------------------------------------------
 
 ## 7. Teton County is the exception: Ski town growth
@@ -246,8 +223,6 @@ teton <- enr_multi |>
   select(end_year, district_name, n_students)
 
 teton
-#> # A tibble: 0 × 3
-#> # ℹ 3 variables: end_year <int>, district_name <chr>, n_students <dbl>
 ```
 
 ``` r
@@ -264,8 +239,6 @@ teton |>
     color = "District"
   )
 ```
-
-![](enrollment_hooks_files/figure-html/growth-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -285,10 +258,6 @@ n_districts <- enr_2024 |>
   )
 
 n_districts
-#> # A tibble: 1 × 3
-#>   n_districts total_students avg_per_district
-#>         <int>          <dbl>            <dbl>
-#> 1           0              0              NaN
 ```
 
 With an average of around 2,000 students per district, Wyoming’s
@@ -316,8 +285,6 @@ school_sizes <- enr_2024 |>
          levels = c("Under 50", "50-99", "100-249", "250-499", "500+")))
 
 school_sizes
-#> # A tibble: 0 × 2
-#> # ℹ 2 variables: size_category <fct>, n_schools <int>
 ```
 
 ------------------------------------------------------------------------
@@ -334,8 +301,6 @@ k_vs_12 <- enr_multi |>
   pivot_wider(names_from = grade_level, values_from = n_students)
 
 k_vs_12
-#> # A tibble: 0 × 1
-#> # ℹ 1 variable: end_year <int>
 ```
 
 When kindergarten classes shrink, elementary, middle, and high schools
@@ -356,8 +321,6 @@ hispanic_trend <- enr_multi |>
   mutate(yoy_change = round((n_students / lag(n_students) - 1) * 100, 1))
 
 hispanic_trend
-#> # A tibble: 0 × 3
-#> # ℹ 3 variables: end_year <int>, n_students <dbl>, yoy_change <dbl>
 ```
 
 ``` r
@@ -372,8 +335,6 @@ ggplot(hispanic_trend, aes(x = end_year, y = n_students)) +
     y = "Hispanic Students"
   )
 ```
-
-![](enrollment_hooks_files/figure-html/hispanic-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -390,8 +351,6 @@ sweetwater <- enr_multi |>
   select(end_year, district_name, n_students)
 
 sweetwater
-#> # A tibble: 0 × 3
-#> # ℹ 3 variables: end_year <int>, district_name <chr>, n_students <dbl>
 ```
 
 ``` r
@@ -408,8 +367,6 @@ sweetwater |>
     color = "District"
   )
 ```
-
-![](enrollment_hooks_files/figure-html/sweetwater-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -442,9 +399,6 @@ if (all(c("econ_disadv", "total_enrollment") %in% names(econ_wide))) {
 }
 
 econ
-#> # A tibble: 0 × 4
-#> # ℹ 4 variables: district_name <chr>, total_enrollment <dbl>,
-#> #   econ_disadv <dbl>, pct_econ_disadv <dbl>
 ```
 
 ``` r
@@ -462,8 +416,6 @@ econ |>
     y = NULL
   )
 ```
-
-![](enrollment_hooks_files/figure-html/econ-disadv-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -483,8 +435,6 @@ grade_enr <- enr_2024 |>
                     "06", "07", "08", "09", "10", "11", "12")))
 
 grade_enr
-#> # A tibble: 0 × 2
-#> # ℹ 2 variables: grade_level <fct>, n_students <dbl>
 ```
 
 ``` r
@@ -500,8 +450,6 @@ ggplot(grade_enr, aes(x = grade_level, y = n_students, fill = grade_level)) +
     y = "Number of Students"
   )
 ```
-
-![](enrollment_hooks_files/figure-html/grade-level-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -519,8 +467,6 @@ smallest <- enr_2024 |>
   select(district_name, n_students)
 
 smallest
-#> # A tibble: 0 × 2
-#> # ℹ 2 variables: district_name <chr>, n_students <dbl>
 ```
 
 ``` r
@@ -538,8 +484,6 @@ smallest |>
     y = NULL
   )
 ```
-
-![](enrollment_hooks_files/figure-html/smallest-districts-chart-1.png)
 
 ------------------------------------------------------------------------
 
@@ -573,42 +517,4 @@ education.
 
 ``` r
 sessionInfo()
-#> R version 4.5.2 (2025-10-31)
-#> Platform: x86_64-pc-linux-gnu
-#> Running under: Ubuntu 24.04.3 LTS
-#> 
-#> Matrix products: default
-#> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
-#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
-#> 
-#> locale:
-#>  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
-#>  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
-#>  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
-#> [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
-#> 
-#> time zone: UTC
-#> tzcode source: system (glibc)
-#> 
-#> attached base packages:
-#> [1] stats     graphics  grDevices utils     datasets  methods   base     
-#> 
-#> other attached packages:
-#> [1] ggplot2_4.0.2      tidyr_1.3.2        dplyr_1.2.0        wyschooldata_0.1.0
-#> 
-#> loaded via a namespace (and not attached):
-#>  [1] gtable_0.3.6       jsonlite_2.0.0     qpdf_1.4.1         compiler_4.5.2    
-#>  [5] pdftools_3.7.0     Rcpp_1.1.1         tidyselect_1.2.1   xml2_1.5.2        
-#>  [9] jquerylib_0.1.4    systemfonts_1.3.1  scales_1.4.0       textshaping_1.0.4 
-#> [13] yaml_2.3.12        fastmap_1.2.0      R6_2.6.1           labeling_0.4.3    
-#> [17] generics_0.1.4     curl_7.0.0         knitr_1.51         forcats_1.0.1     
-#> [21] tibble_3.3.1       desc_1.4.3         bslib_0.10.0       pillar_1.11.1     
-#> [25] RColorBrewer_1.1-3 rlang_1.1.7        cachem_1.1.0       xfun_0.56         
-#> [29] fs_1.6.6           sass_0.4.10        S7_0.2.1           cli_3.6.5         
-#> [33] withr_3.0.2        pkgdown_2.2.0      magrittr_2.0.4     rvest_1.0.5       
-#> [37] digest_0.6.39      grid_4.5.2         askpass_1.2.1      rappdirs_0.3.4    
-#> [41] lifecycle_1.0.5    vctrs_0.7.1        evaluate_1.0.5     glue_1.8.0        
-#> [45] farver_2.1.2       codetools_0.2-20   ragg_1.5.0         httr_1.4.7        
-#> [49] rmarkdown_2.30     purrr_1.2.1        tools_4.5.2        pkgconfig_2.0.3   
-#> [53] htmltools_0.5.9
 ```

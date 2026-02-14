@@ -652,7 +652,7 @@
 <li>
 <strong>Suppression</strong>: Small cell sizes may be suppressed by WDE in source data</li>
 <li>
-<strong>Known issues</strong>: Some years may return zero-row tibbles if the WDE reporting portal changes URLs or formats; use <code>use_cache = TRUE</code> for stability</li>
+<strong>Known issues</strong>: The WDE reporting portal (reporting.edu.wyo.gov) currently returns HTTP 403 errors, making modern era data (2008+) inaccessible. Use <code>use_cache = TRUE</code> for stability. PDF-era data (2000-2007) downloads are still functional.</li>
 </ul>
 </div>
 <div class="section level2">
