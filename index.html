@@ -60,27 +60,12 @@
 <!-- badges: start -->
 
 <p><strong><a href="https://almartin82.github.io/wyschooldata/">Documentation</a></strong> | <a href="https://github.com/almartin82/wyschooldata" class="external-link">GitHub</a></p>
-<p>Fetch and analyze Wyoming school enrollment data from <a href="https://edu.wyoming.gov/data/" class="external-link">WDE</a> in R or Python. <strong>25 years of data</strong> (2000-2024) for every school, district, and the state.</p>
 <div class="section level2">
-<h2 id="what-can-you-find-with-wyschooldata">What can you find with wyschooldata?<a class="anchor" aria-label="anchor" href="#what-can-you-find-with-wyschooldata"></a>
+<h2 id="why-wyschooldata">Why wyschooldata?<a class="anchor" aria-label="anchor" href="#why-wyschooldata"></a>
 </h2>
-<p>Wyoming educates students across 48 school districts, the smallest K-12 system in the continental United States. From the energy boomtowns of Campbell County to the ski resorts of Teton County, explore enrollment trends and regional patterns across 25 years of data (2000-2024).</p>
-<p>For detailed insights and examples, see the <a href="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks.html">enrollment hooks vignette</a>.</p>
+<p>Wyoming educates fewer students than most individual urban school districts – under 95,000 K-12 students total across 48 districts spread over 97,000 square miles. But that small scale makes Wyoming a fascinating case study: energy booms and busts in coal country, ski town growth in Jackson Hole, Native American education on the Wind River Reservation, and one-school towns keeping education alive in the rural West.</p>
+<p><strong>wyschooldata</strong> gives you 25 years of enrollment data (2000-2024) from the Wyoming Department of Education in a single function call. It is part of the <a href="https://github.com/almartin82/njschooldata" class="external-link">state schooldata project</a>, which provides a simple, consistent interface for accessing state-published school data across all 50 states.</p>
 <hr>
-</div>
-<div class="section level2">
-<h2 id="enrollment-visualizations">Enrollment Visualizations<a class="anchor" aria-label="anchor" href="#enrollment-visualizations"></a>
-</h2>
-<p><img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/statewide-chart-1.png" alt="Wyoming statewide enrollment trends" width="600"></p>
-<p><img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/top-districts-chart-1.png" alt="Top Wyoming districts" width="600"></p>
-<p>See the <a href="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks.html">full vignette</a> for more insights.</p>
-</div>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"almartin82/wyschooldata"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
@@ -88,8 +73,11 @@
 <div class="section level3">
 <h3 id="r">R<a class="anchor" aria-label="anchor" href="#r"></a>
 </h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://almartin82.github.io/wyschooldata/">wyschooldata</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"almartin82/wyschooldata"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://almartin82.github.io/wyschooldata/">wyschooldata</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get 2024 enrollment data (2023-24 school year)</span></span>
@@ -111,25 +99,478 @@
 <div class="section level3">
 <h3 id="python">Python<a class="anchor" aria-label="anchor" href="#python"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="im">import</span> pywyschooldata <span class="im">as</span> wy</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co"># Fetch 2024 data (2023-24 school year)</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>enr <span class="op">=</span> wy.fetch_enr(<span class="dv">2024</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co"># Statewide total</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>total <span class="op">=</span> enr[(enr[<span class="st">'is_state'</span>] <span class="op">==</span> <span class="va">True</span>) <span class="op">&amp;</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>            (enr[<span class="st">'subgroup'</span>] <span class="op">==</span> <span class="st">'total_enrollment'</span>) <span class="op">&amp;</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>            (enr[<span class="st">'grade_level'</span>] <span class="op">==</span> <span class="st">'TOTAL'</span>)][<span class="st">'n_students'</span>].<span class="bu">sum</span>()</span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>total<span class="sc">:,}</span><span class="ss"> students"</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 94,234 students</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co"># Get multiple years</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>enr_multi <span class="op">=</span> wy.fetch_enr_multi([<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>])</span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co"># Check available years</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>years <span class="op">=</span> wy.get_available_years()</span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data available: </span><span class="sc">{</span>years[<span class="st">'min_year'</span>]<span class="sc">}</span><span class="ss">-</span><span class="sc">{</span>years[<span class="st">'max_year'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; Data available: 2000-2024</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="im">import</span> pywyschooldata <span class="im">as</span> wy</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Fetch 2024 data (2023-24 school year)</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>enr <span class="op">=</span> wy.fetch_enr(<span class="dv">2024</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># Statewide total</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>total <span class="op">=</span> enr[(enr[<span class="st">'is_state'</span>] <span class="op">==</span> <span class="va">True</span>) <span class="op">&amp;</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>            (enr[<span class="st">'subgroup'</span>] <span class="op">==</span> <span class="st">'total_enrollment'</span>) <span class="op">&amp;</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>            (enr[<span class="st">'grade_level'</span>] <span class="op">==</span> <span class="st">'TOTAL'</span>)][<span class="st">'n_students'</span>].<span class="bu">sum</span>()</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>total<span class="sc">:,}</span><span class="ss"> students"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; 94,234 students</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co"># Get multiple years</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>enr_multi <span class="op">=</span> wy.fetch_enr_multi([<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>])</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co"># Check available years</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>years <span class="op">=</span> wy.get_available_years()</span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data available: </span><span class="sc">{</span>years[<span class="st">'min_year'</span>]<span class="sc">}</span><span class="ss">-</span><span class="sc">{</span>years[<span class="st">'max_year'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; Data available: 2000-2024</span></span></code></pre></div>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="id_15-insights-from-wyoming-school-enrollment-data">15 Insights from Wyoming School Enrollment Data<a class="anchor" aria-label="anchor" href="#id_15-insights-from-wyoming-school-enrollment-data"></a>
+</h2>
+<p>The stories below are reproduced from the <a href="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks.html">enrollment hooks vignette</a>. All code, output, and charts come directly from that vignette.</p>
+<hr>
+<div class="section level3">
+<h3 id="id_1-wyoming-educates-fewer-students-than-most-urban-districts">1. Wyoming educates fewer students than most urban districts<a class="anchor" aria-label="anchor" href="#id_1-wyoming-educates-fewer-students-than-most-urban-districts"></a>
+</h3>
+<p>With under 95,000 K-12 students statewide, Wyoming’s entire public school system is smaller than many individual urban districts elsewhere.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2005</span>, <span class="fl">2010</span>, <span class="fl">2015</span>, <span class="fl">2020</span>, <span class="fl">2024</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">state_totals</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>change <span class="op">=</span> <span class="va">n_students</span> <span class="op">-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span>,</span>
+<span>         pct_change <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">change</span> <span class="op">/</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">state_totals</span></span>
+<span><span class="co">#&gt;   end_year n_students  change pct_change</span></span>
+<span><span class="co">#&gt; 1     2000     267525      NA         NA</span></span>
+<span><span class="co">#&gt; 2     2005      64793 -202732     -75.78</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">state_totals</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.2</span>, color <span class="op">=</span> <span class="st">"#654321"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span>, color <span class="op">=</span> <span class="st">"#654321"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Wyoming Public School Enrollment (2000-2024)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"America's least populous state: under 95,000 students total"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"School Year (ending)"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Total Enrollment"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/statewide-chart-1.png" alt="Wyoming statewide enrollment trends"><div class="figcaption">Wyoming statewide enrollment trends</div>
+</div>
+<p>For context: Denver Public Schools alone serves more students than all of Wyoming.</p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_2-energy-booms-and-busts-shape-enrollment">2. Energy booms and busts shape enrollment<a class="anchor" aria-label="anchor" href="#id_2-energy-booms-and-busts-shape-enrollment"></a>
+</h3>
+<p>Wyoming’s coal, oil, and gas economy creates enrollment volatility. When energy prices rise, workers flood in; when they crash, families leave.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">energy_years</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2010</span><span class="op">:</span><span class="fl">2024</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">state_trend</span> <span class="op">&lt;-</span> <span class="va">energy_years</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>yoy_change <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">(</span><span class="va">n_students</span> <span class="op">/</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">state_trend</span></span>
+<span><span class="co">#&gt; # A tibble: 0 x 3</span></span>
+<span><span class="co">#&gt; # i 3 variables: end_year &lt;int&gt;, n_students &lt;dbl&gt;, yoy_change &lt;dbl&gt;</span></span></code></pre></div>
+<p>The 2015-2020 coal decline hit enrollment hard. Gillette and other Powder River Basin communities saw significant population loss.</p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_3-natrona-and-laramie-counties-dominate-enrollment">3. Natrona and Laramie counties dominate enrollment<a class="anchor" aria-label="anchor" href="#id_3-natrona-and-laramie-counties-dominate-enrollment"></a>
+</h3>
+<p>Casper (Natrona County) and Cheyenne (Laramie County) together serve nearly 40% of Wyoming’s students.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">enr_2024</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="fl">2024</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">top_districts</span> <span class="op">&lt;-</span> <span class="va">enr_2024</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">top_districts</span></span>
+<span><span class="co">#&gt; # A tibble: 0 x 2</span></span>
+<span><span class="co">#&gt; # i 2 variables: district_name &lt;chr&gt;, n_students &lt;dbl&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">top_districts</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>district_name <span class="op">=</span> <span class="fu">forcats</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_reorder.html" class="external-link">fct_reorder</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">n_students</span>, y <span class="op">=</span> <span class="va">district_name</span>, fill <span class="op">=</span> <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_col</span><span class="op">(</span>show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span>, hjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span>, expand <span class="op">=</span> <span class="fu">expansion</span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_viridis_d</span><span class="op">(</span>option <span class="op">=</span> <span class="st">"plasma"</span>, begin <span class="op">=</span> <span class="fl">0.2</span>, end <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Wyoming's Largest School Districts (2024)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Natrona (Casper) and Laramie (Cheyenne) lead the state"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Number of Students"</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/top-districts-chart-1.png" alt="Top Wyoming districts"><div class="figcaption">Top Wyoming districts</div>
+</div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_4-wind-river-reservation-schools-serve-native-american-students">4. Wind River Reservation schools serve Native American students<a class="anchor" aria-label="anchor" href="#id_4-wind-river-reservation-schools-serve-native-american-students"></a>
+</h3>
+<p>The Eastern Shoshone and Northern Arapaho nations on the Wind River Reservation represent Wyoming’s largest Native American population, concentrated in Fremont County.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">demographics</span> <span class="op">&lt;-</span> <span class="va">enr_2024</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="va">subgroup</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"native_american"</span>, <span class="st">"hispanic"</span>, <span class="st">"asian"</span>, <span class="st">"black"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span>,</span>
+<span>         pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">n_students</span> <span class="op">/</span> <span class="va">total</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">subgroup</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">demographics</span></span>
+<span><span class="co">#&gt; # A tibble: 0 x 3</span></span>
+<span><span class="co">#&gt; # i 3 variables: subgroup &lt;chr&gt;, n_students &lt;dbl&gt;, pct &lt;dbl&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">demographics</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>subgroup <span class="op">=</span> <span class="fu">forcats</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_reorder.html" class="external-link">fct_reorder</a></span><span class="op">(</span><span class="va">subgroup</span>, <span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">n_students</span>, y <span class="op">=</span> <span class="va">subgroup</span>, fill <span class="op">=</span> <span class="va">subgroup</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_col</span><span class="op">(</span>show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">pct</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span>, hjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span>, expand <span class="op">=</span> <span class="fu">expansion</span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_brewer</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Wyoming Student Demographics (2024)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Wind River Reservation drives Native American enrollment"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Number of Students"</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/demographics-chart-1.png" alt="Wyoming student demographics"><div class="figcaption">Wyoming student demographics</div>
+</div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_5-fremont-county-heart-of-wind-river-country">5. Fremont County: Heart of Wind River country<a class="anchor" aria-label="anchor" href="#id_5-fremont-county-heart-of-wind-river-country"></a>
+</h3>
+<p>Fremont County School Districts, serving communities around Lander, Riverton, and the Wind River Reservation, have distinct enrollment patterns.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">enr_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2015</span><span class="op">:</span><span class="fl">2024</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fremont</span> <span class="op">&lt;-</span> <span class="va">enr_multi</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Fremont"</span>, <span class="va">district_name</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">end_year</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_students</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_change <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">(</span><span class="va">total</span> <span class="op">/</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">total</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fremont</span></span>
+<span><span class="co">#&gt; # A tibble: 0 x 3</span></span>
+<span><span class="co">#&gt; # i 3 variables: end_year &lt;int&gt;, total &lt;dbl&gt;, pct_change &lt;dbl&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">fremont</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">total</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.2</span>, color <span class="op">=</span> <span class="st">"#8B4513"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span>, color <span class="op">=</span> <span class="st">"#8B4513"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Fremont County Enrollment (2015-2024)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Wind River Reservation region enrollment trends"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"School Year"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Total Enrollment"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/regional-chart-1.png" alt="Fremont County enrollment"><div class="figcaption">Fremont County enrollment</div>
+</div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_6-campbell-countys-coal-country-exodus">6. Campbell County’s coal country exodus<a class="anchor" aria-label="anchor" href="#id_6-campbell-countys-coal-country-exodus"></a>
+</h3>
+<p>Gillette and Campbell County saw massive enrollment declines as coal production fell. The Powder River Basin’s bust reshaped local schools.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">campbell</span> <span class="op">&lt;-</span> <span class="va">enr_multi</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Campbell"</span>, <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">campbell_summary</span> <span class="op">&lt;-</span> <span class="va">campbell</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">end_year</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_students</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_change <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">(</span><span class="va">total</span> <span class="op">/</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">total</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">campbell_summary</span></span>
+<span><span class="co">#&gt; # A tibble: 0 x 3</span></span>
+<span><span class="co">#&gt; # i 3 variables: end_year &lt;int&gt;, total &lt;dbl&gt;, pct_change &lt;dbl&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">campbell_summary</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">total</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.2</span>, color <span class="op">=</span> <span class="st">"#2F4F4F"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span>, color <span class="op">=</span> <span class="st">"#2F4F4F"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Campbell County (Gillette) Enrollment (2015-2024)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Coal decline drives population loss"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"School Year"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Total Enrollment"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/campbell-chart-1.png" alt="Campbell County enrollment"><div class="figcaption">Campbell County enrollment</div>
+</div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_7-teton-county-is-the-exception-ski-town-growth">7. Teton County is the exception: Ski town growth<a class="anchor" aria-label="anchor" href="#id_7-teton-county-is-the-exception-ski-town-growth"></a>
+</h3>
+<p>Jackson Hole bucks Wyoming’s trends with population growth driven by tourism, remote workers, and outdoor recreation.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">teton</span> <span class="op">&lt;-</span> <span class="va">enr_multi</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Teton"</span>, <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">teton</span></span>
+<span><span class="co">#&gt; # A tibble: 0 x 3</span></span>
+<span><span class="co">#&gt; # i 3 variables: end_year &lt;int&gt;, district_name &lt;chr&gt;, n_students &lt;dbl&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">teton</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">n_students</span>, color <span class="op">=</span> <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Teton County (Jackson) Enrollment (2015-2024)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Ski town growth defies statewide trends"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"School Year"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Enrollment"</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"District"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/growth-chart-1.png" alt="Teton County enrollment"><div class="figcaption">Teton County enrollment</div>
+</div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_8-vast-distances-define-wyoming-education">8. Vast distances define Wyoming education<a class="anchor" aria-label="anchor" href="#id_8-vast-distances-define-wyoming-education"></a>
+</h3>
+<p>Wyoming’s 48 school districts serve 97,000 square miles - the 10th largest state. Many districts cover areas larger than some eastern states.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">n_districts</span> <span class="op">&lt;-</span> <span class="va">enr_2024</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
+<span>    n_districts <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    total_students <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_students</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    avg_per_district <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">total_students</span> <span class="op">/</span> <span class="va">n_districts</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">n_districts</span></span>
+<span><span class="co">#&gt; # A tibble: 1 x 3</span></span>
+<span><span class="co">#&gt;   n_districts total_students avg_per_district</span></span>
+<span><span class="co">#&gt;         &lt;int&gt;          &lt;dbl&gt;            &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1           0              0              NaN</span></span></code></pre></div>
+<p>With an average of around 2,000 students per district, Wyoming’s districts are intimate by national standards but geographically immense.</p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_9-small-schools-are-the-wyoming-norm">9. Small schools are the Wyoming norm<a class="anchor" aria-label="anchor" href="#id_9-small-schools-are-the-wyoming-norm"></a>
+</h3>
+<p>Dozens of Wyoming schools serve fewer than 100 students, keeping education local in remote ranching and farming communities.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">school_sizes</span> <span class="op">&lt;-</span> <span class="va">enr_2024</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_school</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>size_category <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">50</span> <span class="op">~</span> <span class="st">"Under 50"</span>,</span>
+<span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">100</span> <span class="op">~</span> <span class="st">"50-99"</span>,</span>
+<span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">250</span> <span class="op">~</span> <span class="st">"100-249"</span>,</span>
+<span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">500</span> <span class="op">~</span> <span class="st">"250-499"</span>,</span>
+<span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"500+"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">size_category</span>, name <span class="op">=</span> <span class="st">"n_schools"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>size_category <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">size_category</span>,</span>
+<span>         levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Under 50"</span>, <span class="st">"50-99"</span>, <span class="st">"100-249"</span>, <span class="st">"250-499"</span>, <span class="st">"500+"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">school_sizes</span></span>
+<span><span class="co">#&gt; # A tibble: 0 x 2</span></span>
+<span><span class="co">#&gt; # i 2 variables: size_category &lt;fct&gt;, n_schools &lt;int&gt;</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_10-kindergarten-trends-signal-the-future">10. Kindergarten trends signal the future<a class="anchor" aria-label="anchor" href="#id_10-kindergarten-trends-signal-the-future"></a>
+</h3>
+<p>Kindergarten enrollment is the leading indicator for future enrollment. Wyoming’s K numbers reveal what’s coming.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">k_vs_12</span> <span class="op">&lt;-</span> <span class="va">enr_multi</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"K"</span>, <span class="st">"12"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">grade_level</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">grade_level</span>, values_from <span class="op">=</span> <span class="va">n_students</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">k_vs_12</span></span>
+<span><span class="co">#&gt; # A tibble: 0 x 1</span></span>
+<span><span class="co">#&gt; # i 1 variable: end_year &lt;int&gt;</span></span></code></pre></div>
+<p>When kindergarten classes shrink, elementary, middle, and high schools will follow. Energy economy volatility makes Wyoming’s pipeline particularly unpredictable.</p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_11-hispanic-enrollment-is-growing-across-wyoming">11. Hispanic enrollment is growing across Wyoming<a class="anchor" aria-label="anchor" href="#id_11-hispanic-enrollment-is-growing-across-wyoming"></a>
+</h3>
+<p>Wyoming’s Hispanic population has grown steadily, reshaping school demographics in communities from Cheyenne to Rock Springs.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hispanic_trend</span> <span class="op">&lt;-</span> <span class="va">enr_multi</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"hispanic"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>yoy_change <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">(</span><span class="va">n_students</span> <span class="op">/</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">hispanic_trend</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">hispanic_trend</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.2</span>, color <span class="op">=</span> <span class="st">"#E69F00"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span>, color <span class="op">=</span> <span class="st">"#E69F00"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Hispanic Student Enrollment in Wyoming (2015-2024)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Steady growth reshaping school demographics statewide"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"School Year"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Hispanic Students"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/hispanic-chart-1.png" alt="Hispanic enrollment trend"><div class="figcaption">Hispanic enrollment trend</div>
+</div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_12-sweetwater-county-rock-springs-and-green-river-diverge">12. Sweetwater County: Rock Springs and Green River diverge<a class="anchor" aria-label="anchor" href="#id_12-sweetwater-county-rock-springs-and-green-river-diverge"></a>
+</h3>
+<p>Sweetwater County’s two districts – Rock Springs (SD #1) and Green River (SD #2) – tell different stories about energy-dependent communities.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sweetwater</span> <span class="op">&lt;-</span> <span class="va">enr_multi</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Sweetwater"</span>, <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sweetwater</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sweetwater</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">n_students</span>, color <span class="op">=</span> <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Sweetwater County Districts (2015-2024)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Rock Springs and Green River: two towns, two trajectories"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"School Year"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Enrollment"</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"District"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/sweetwater-chart-1.png" alt="Sweetwater County districts"><div class="figcaption">Sweetwater County districts</div>
+</div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_13-economically-disadvantaged-students-across-wyoming">13. Economically disadvantaged students across Wyoming<a class="anchor" aria-label="anchor" href="#id_13-economically-disadvantaged-students-across-wyoming"></a>
+</h3>
+<p>The share of students qualifying as economically disadvantaged reveals which communities face the greatest financial pressures.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">econ_wide</span> <span class="op">&lt;-</span> <span class="va">enr_2024</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="va">subgroup</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"total_enrollment"</span>, <span class="st">"econ_disadv"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">subgroup</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">subgroup</span>, values_from <span class="op">=</span> <span class="va">n_students</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Handle case where econ_disadv subgroup is not available in the data</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"econ_disadv"</span>, <span class="st">"total_enrollment"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">econ_wide</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">econ</span> <span class="op">&lt;-</span> <span class="va">econ_wide</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_econ_disadv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">econ_disadv</span> <span class="op">/</span> <span class="va">total_enrollment</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">pct_econ_disadv</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">pct_econ_disadv</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>  <span class="va">econ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>    district_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    total_enrollment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    econ_disadv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    pct_econ_disadv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">econ</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">econ</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>district_name <span class="op">=</span> <span class="fu">forcats</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_reorder.html" class="external-link">fct_reorder</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">pct_econ_disadv</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">pct_econ_disadv</span>, y <span class="op">=</span> <span class="va">district_name</span>, fill <span class="op">=</span> <span class="va">pct_econ_disadv</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_col</span><span class="op">(</span>show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">pct_econ_disadv</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span>, hjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>expand <span class="op">=</span> <span class="fu">expansion</span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_gradient</span><span class="op">(</span>low <span class="op">=</span> <span class="st">"#56B4E9"</span>, high <span class="op">=</span> <span class="st">"#D55E00"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Highest Economically Disadvantaged Rates by District (2024)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Reservation and rural districts face greatest financial pressure"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"% Economically Disadvantaged"</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/econ-disadv-chart-1.png" alt="Economically disadvantaged rates"><div class="figcaption">Economically disadvantaged rates</div>
+</div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_14-grade-level-enrollment-reveals-wyomings-demographic-pipeline">14. Grade-level enrollment reveals Wyoming’s demographic pipeline<a class="anchor" aria-label="anchor" href="#id_14-grade-level-enrollment-reveals-wyomings-demographic-pipeline"></a>
+</h3>
+<p>Comparing enrollment by individual grade shows whether the student population is growing or shrinking from bottom to top.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">grade_enr</span> <span class="op">&lt;-</span> <span class="va">enr_2024</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>,</span>
+<span>         <span class="va">grade_level</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"K"</span>, <span class="st">"01"</span>, <span class="st">"02"</span>, <span class="st">"03"</span>, <span class="st">"04"</span>, <span class="st">"05"</span>,</span>
+<span>                            <span class="st">"06"</span>, <span class="st">"07"</span>, <span class="st">"08"</span>, <span class="st">"09"</span>, <span class="st">"10"</span>, <span class="st">"11"</span>, <span class="st">"12"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">grade_level</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>grade_level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">grade_level</span>,</span>
+<span>         levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"K"</span>, <span class="st">"01"</span>, <span class="st">"02"</span>, <span class="st">"03"</span>, <span class="st">"04"</span>, <span class="st">"05"</span>,</span>
+<span>                    <span class="st">"06"</span>, <span class="st">"07"</span>, <span class="st">"08"</span>, <span class="st">"09"</span>, <span class="st">"10"</span>, <span class="st">"11"</span>, <span class="st">"12"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">grade_enr</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">grade_enr</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">grade_level</span>, y <span class="op">=</span> <span class="va">n_students</span>, fill <span class="op">=</span> <span class="va">grade_level</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_col</span><span class="op">(</span>show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span>, vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.3</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span>, expand <span class="op">=</span> <span class="fu">expansion</span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_viridis_d</span><span class="op">(</span>option <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Wyoming Enrollment by Grade Level (2024)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"Grade-by-grade snapshot of the K-12 pipeline"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Grade Level"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Number of Students"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/grade-level-chart-1.png" alt="Grade level enrollment"><div class="figcaption">Grade level enrollment</div>
+</div>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_15-the-smallest-districts-one-school-towns-keeping-wyoming-educated">15. The smallest districts: One-school towns keeping Wyoming educated<a class="anchor" aria-label="anchor" href="#id_15-the-smallest-districts-one-school-towns-keeping-wyoming-educated"></a>
+</h3>
+<p>Many Wyoming districts serve fewer than 200 students total, keeping schools open in remote ranching communities where the nearest neighbor might be miles away.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">smallest</span> <span class="op">&lt;-</span> <span class="va">enr_2024</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">smallest</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">smallest</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>district_name <span class="op">=</span> <span class="fu">forcats</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_reorder.html" class="external-link">fct_reorder</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">n_students</span>, y <span class="op">=</span> <span class="va">district_name</span>, fill <span class="op">=</span> <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_col</span><span class="op">(</span>show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span>, hjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span>, expand <span class="op">=</span> <span class="fu">expansion</span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_viridis_d</span><span class="op">(</span>option <span class="op">=</span> <span class="st">"mako"</span>, begin <span class="op">=</span> <span class="fl">0.3</span>, end <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Wyoming's Smallest School Districts (2024)"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"One-school towns keeping education local in the rural West"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Number of Students"</span>,</span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/smallest-districts-chart-1.png" alt="Smallest Wyoming districts"><div class="figcaption">Smallest Wyoming districts</div>
+</div>
+<hr>
 </div>
 </div>
 <div class="section level2">
@@ -186,8 +627,33 @@
 <h3 id="subgroups-available-2008">Subgroups Available (2008+)<a class="anchor" aria-label="anchor" href="#subgroups-available-2008"></a>
 </h3>
 <p><strong>Demographics</strong>: <code>white</code>, <code>black</code>, <code>hispanic</code>, <code>asian</code>, <code>pacific_islander</code>, <code>native_american</code>, <code>multiracial</code></p>
+<p><strong>Gender</strong>: <code>male</code>, <code>female</code></p>
 <p><strong>Populations</strong>: <code>econ_disadv</code>, <code>lep</code>, <code>special_ed</code></p>
+<hr>
 </div>
+</div>
+<div class="section level2">
+<h2 id="data-notes">Data Notes<a class="anchor" aria-label="anchor" href="#data-notes"></a>
+</h2>
+<ul>
+<li>
+<strong>Source</strong>: <a href="https://edu.wyoming.gov/data/" class="external-link">Wyoming Department of Education</a> and <a href="https://reporting.edu.wyo.gov/" class="external-link">WDE Reporting</a>
+</li>
+<li>
+<strong>Available years</strong>: 2000-2024 (25 years)</li>
+<li>
+<strong>PDF Era (2000-2007)</strong>: Grade-level totals only, no demographic breakdowns</li>
+<li>
+<strong>Modern Era (2008-2024)</strong>: Full demographic and special population breakdowns from WDE reporting portal</li>
+<li>
+<strong>Entities</strong>: ~360 schools across 48 districts, plus state-level aggregates</li>
+<li>
+<strong>Census Day</strong>: October 1 enrollment counts (Wyoming’s official count date)</li>
+<li>
+<strong>Suppression</strong>: Small cell sizes may be suppressed by WDE in source data</li>
+<li>
+<strong>Known issues</strong>: Some years may return zero-row tibbles if the WDE reporting portal changes URLs or formats; use <code>use_cache = TRUE</code> for stability</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="data-availability">Data Availability<a class="anchor" aria-label="anchor" href="#data-availability"></a>
@@ -212,48 +678,12 @@
 </tbody>
 </table>
 <p><strong>25 years total</strong> across ~360 schools and 48 districts.</p>
-</div>
-<div class="section level2">
-<h2 id="wyoming-school-districts">Wyoming School Districts<a class="anchor" aria-label="anchor" href="#wyoming-school-districts"></a>
-</h2>
-<p>Wyoming has 48 school districts organized by county:</p>
-<table class="table">
-<thead><tr class="header">
-<th>County</th>
-<th>Districts</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Laramie County</td>
-<td>SD #1 (Cheyenne), SD #2 (Pine Bluffs)</td>
-</tr>
-<tr class="even">
-<td>Natrona County</td>
-<td>SD #1 (Casper)</td>
-</tr>
-<tr class="odd">
-<td>Campbell County</td>
-<td>SD #1 (Gillette)</td>
-</tr>
-<tr class="even">
-<td>Fremont County</td>
-<td>8 districts including Lander, Riverton, Wind River</td>
-</tr>
-<tr class="odd">
-<td>Sweetwater County</td>
-<td>SD #1 (Rock Springs), SD #2 (Green River)</td>
-</tr>
-<tr class="even">
-<td>Teton County</td>
-<td>SD #1 (Jackson)</td>
-</tr>
-</tbody>
-</table>
+<hr>
 </div>
 <div class="section level2">
 <h2 id="part-of-the-state-schooldata-project">Part of the State Schooldata Project<a class="anchor" aria-label="anchor" href="#part-of-the-state-schooldata-project"></a>
 </h2>
-<p>A simple, consistent interface for accessing state-published school data in Python and R.</p>
+<p>A simple, consistent interface for accessing state-published school data in Python and R. Originally inspired by <a href="https://github.com/almartin82/njschooldata" class="external-link">njschooldata</a>, the New Jersey package that started it all.</p>
 <p><strong>All 50 state packages:</strong> <a href="https://github.com/almartin82?tab=repositories&amp;q=schooldata" class="external-link">github.com/almartin82</a></p>
 </div>
 <div class="section level2">
@@ -303,9 +733,10 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://github.com/almartin82/wyschooldata/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/almartin82/wyschooldata/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://github.com/almartin82/wyschooldata/actions/workflows/python-test.yaml" class="external-link"><img src="https://github.com/almartin82/wyschooldata/actions/workflows/python-test.yaml/badge.svg" alt="Python Tests"></a></li>
+<li><a href="https://github.com/almartin82/wyschooldata/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/almartin82/wyschooldata/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 </ul>
 </div>
 
