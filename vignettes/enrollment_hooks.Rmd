@@ -370,15 +370,27 @@ sweetwater |>
 The share of students qualifying as economically disadvantaged reveals which communities face the greatest financial pressures.
 
 ```{r econ-disadv-data}
-econ <- enr_2024 |>
+econ_wide <- enr_2024 |>
   filter(is_district, grade_level == "TOTAL",
          subgroup %in% c("total_enrollment", "econ_disadv")) |>
   select(district_name, subgroup, n_students) |>
-  pivot_wider(names_from = subgroup, values_from = n_students) |>
-  mutate(pct_econ_disadv = round(econ_disadv / total_enrollment * 100, 1)) |>
-  filter(!is.na(pct_econ_disadv)) |>
-  arrange(desc(pct_econ_disadv)) |>
-  head(10)
+  pivot_wider(names_from = subgroup, values_from = n_students)
+
+# Handle case where econ_disadv subgroup is not available in the data
+if (all(c("econ_disadv", "total_enrollment") %in% names(econ_wide))) {
+  econ <- econ_wide |>
+    mutate(pct_econ_disadv = round(econ_disadv / total_enrollment * 100, 1)) |>
+    filter(!is.na(pct_econ_disadv)) |>
+    arrange(desc(pct_econ_disadv)) |>
+    head(10)
+} else {
+  econ <- tibble(
+    district_name = character(),
+    total_enrollment = numeric(),
+    econ_disadv = numeric(),
+    pct_econ_disadv = numeric()
+  )
+}
 
 econ
 ```
