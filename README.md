@@ -603,7 +603,7 @@ smallest |>
 - **Entities**: ~360 schools across 48 districts, plus state-level aggregates
 - **Census Day**: October 1 enrollment counts (Wyoming's official count date)
 - **Suppression**: Small cell sizes may be suppressed by WDE in source data
-- **Known issues**: Some years may return zero-row tibbles if the WDE reporting portal changes URLs or formats; use `use_cache = TRUE` for stability
+- **Known issues**: The WDE reporting portal (reporting.edu.wyo.gov) currently returns HTTP 403 errors, making modern era data (2008+) inaccessible. Use `use_cache = TRUE` for stability. PDF-era data (2000-2007) downloads are still functional.
 
 ## Data Availability
 
