@@ -133,6 +133,27 @@ devtools::test(filter = "pipeline-live")
 
 ---
 
+## Valid Filter Values (tidy enrollment via `fetch_enr(tidy = TRUE)`)
+
+### subgroup
+`total_enrollment`, `white`, `black`, `hispanic`, `asian`, `native_american`, `pacific_islander`, `multiracial`, `male`, `female`, `special_ed`, `lep`, `econ_disadv`
+
+**NOT in tidy enrollment:** All subgroups are conditional on their presence in the raw Wyoming WDE data.
+
+### grade_level
+`PK`, `K`, `01`-`12`, `TOTAL`
+
+Grade aggregates from `enr_grade_aggs()`: `K8`, `HS`, `K12`
+
+**Note:** Raw column names are mapped to standard codes (`PK`, `K`, `01`-`12`) in tidy output. Always filter on the mapped values.
+
+### entity flags
+`is_state`, `is_district`, `is_school`
+
+Determined by the `type` column: `"State"`, `"District"`, `"School"`. Note: Wyoming uses `is_school` instead of `is_campus`.
+
+---
+
 ## README Images from Vignettes (REQUIRED)
 
 **NEVER use `man/figures/` or `generate_readme_figs.R` for README images.**
