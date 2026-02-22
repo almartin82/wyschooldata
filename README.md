@@ -11,9 +11,9 @@
 
 ## Why wyschooldata?
 
-Wyoming educates fewer students than most individual urban school districts -- under 95,000 K-12 students total across 48 districts spread over 97,000 square miles. But that small scale makes Wyoming a fascinating case study: energy booms and busts in coal country, ski town growth in Jackson Hole, Native American education on the Wind River Reservation, and one-school towns keeping education alive in the rural West.
+Wyoming educates fewer students than most individual urban school districts -- under 90,000 K-12 students across 48 districts spread over 97,000 square miles. But that small scale makes Wyoming a fascinating case study: a natural gas boomtown that grew 47% in seven years, Wind River Reservation districts losing nearly 40% of their students, school consolidation across the frontier, and one-school towns with fewer than 100 students keeping education alive in the rural West.
 
-**wyschooldata** gives you 25 years of enrollment data (2000-2024) from the Wyoming Department of Education in a single function call. It is part of the [state schooldata project](https://github.com/almartin82/njschooldata), which provides a simple, consistent interface for accessing state-published school data across all 50 states.
+**wyschooldata** gives you enrollment data from the Wyoming Department of Education's PDF-era reports (2000-2007) in a single function call. It is part of the [state schooldata project](https://github.com/almartin82/njschooldata), which provides a simple, consistent interface for accessing state-published school data across all 50 states.
 
 ---
 
@@ -28,14 +28,14 @@ devtools::install_github("almartin82/wyschooldata")
 library(wyschooldata)
 library(dplyr)
 
-# Get 2024 enrollment data (2023-24 school year)
-enr <- fetch_enr(2024)
+# Get 2007 enrollment data (2006-07 school year)
+enr <- fetch_enr(2007)
 
 # Statewide total
 enr |>
   filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
   pull(n_students)
-#> 94,234
+#> 85578
 
 # Top 5 districts
 enr |>
@@ -50,23 +50,23 @@ enr |>
 ```python
 import pywyschooldata as wy
 
-# Fetch 2024 data (2023-24 school year)
-enr = wy.fetch_enr(2024)
+# Fetch 2007 data (2006-07 school year)
+enr = wy.fetch_enr(2007)
 
 # Statewide total
 total = enr[(enr['is_state'] == True) &
             (enr['subgroup'] == 'total_enrollment') &
             (enr['grade_level'] == 'TOTAL')]['n_students'].sum()
 print(f"{total:,} students")
-#> 94,234 students
+#> 85,578 students
 
 # Get multiple years
-enr_multi = wy.fetch_enr_multi([2020, 2021, 2022, 2023, 2024])
+enr_multi = wy.fetch_enr_multi([2000, 2003, 2005, 2007])
 
 # Check available years
 years = wy.get_available_years()
 print(f"Data available: {years['min_year']}-{years['max_year']}")
-#> Data available: 2000-2024
+#> Data available: 2000-2007
 ```
 
 ---
@@ -77,36 +77,30 @@ The stories below are reproduced from the [enrollment hooks vignette](https://al
 
 ---
 
-### 1. Wyoming educates fewer students than most urban districts
+### 1. Wyoming lost 4,500 students in seven years, then started bouncing back
 
-With under 95,000 K-12 students statewide, Wyoming's entire public school system is smaller than many individual urban districts elsewhere.
+Statewide enrollment fell from 90,065 in 2000 to a low of 83,705 in 2005 before recovering to 85,578 in 2007 -- a pattern driven by energy sector volatility.
 
 ```r
-enr <- fetch_enr_multi(c(2000, 2005, 2010, 2015, 2020, 2024))
+enr <- fetch_enr_multi(2000:2007, use_cache = TRUE)
 
 state_totals <- enr |>
   filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
   select(end_year, n_students) |>
   mutate(change = n_students - lag(n_students),
-         pct_change = round(change / lag(n_students) * 100, 2))
+         pct_change = round(change / lag(n_students) * 100, 1))
 
+stopifnot(nrow(state_totals) > 0)
 state_totals
-#>   end_year n_students  change pct_change
-#> 1     2000     267525      NA         NA
-#> 2     2005      64793 -202732     -75.78
-```
-
-```r
-ggplot(state_totals, aes(x = end_year, y = n_students)) +
-  geom_line(linewidth = 1.2, color = "#654321") +
-  geom_point(size = 3, color = "#654321") +
-  scale_y_continuous(labels = scales::comma, limits = c(0, NA)) +
-  labs(
-    title = "Wyoming Public School Enrollment (2000-2024)",
-    subtitle = "America's least populous state: under 95,000 students total",
-    x = "School Year (ending)",
-    y = "Total Enrollment"
-  )
+#>   end_year n_students change pct_change
+#> 1     2000      90065     NA         NA
+#> 2     2001      87897  -2168       -2.4
+#> 3     2002      86116  -1781       -2.0
+#> 4     2003      84739  -1377       -1.6
+#> 5     2004      83772   -967       -1.1
+#> 6     2005      83705    -67       -0.1
+#> 7     2006      84611    906        1.1
+#> 8     2007      85578    967        1.1
 ```
 
 ![Wyoming statewide enrollment trends](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/statewide-chart-1.png)
@@ -115,145 +109,134 @@ For context: Denver Public Schools alone serves more students than all of Wyomin
 
 ---
 
-### 2. Energy booms and busts shape enrollment
+### 2. Cheyenne and Casper together educate 57% of Wyoming students
 
-Wyoming's coal, oil, and gas economy creates enrollment volatility. When energy prices rise, workers flood in; when they crash, families leave.
-
-```r
-energy_years <- fetch_enr_multi(2010:2024, use_cache = TRUE)
-
-state_trend <- energy_years |>
-  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
-  select(end_year, n_students) |>
-  mutate(yoy_change = round((n_students / lag(n_students) - 1) * 100, 1))
-
-state_trend
-#> # A tibble: 0 x 3
-#> # i 3 variables: end_year <int>, n_students <dbl>, yoy_change <dbl>
-```
-
-The 2015-2020 coal decline hit enrollment hard. Gillette and other Powder River Basin communities saw significant population loss.
-
----
-
-### 3. Natrona and Laramie counties dominate enrollment
-
-Casper (Natrona County) and Cheyenne (Laramie County) together serve nearly 40% of Wyoming's students.
+Laramie #1 (Cheyenne) and Natrona #1 (Casper) serve more than half the state, making Wyoming a two-city school system surrounded by vast emptiness.
 
 ```r
-enr_2024 <- fetch_enr(2024, use_cache = TRUE)
+enr_2007 <- fetch_enr(2007, use_cache = TRUE)
 
-top_districts <- enr_2024 |>
+top_districts <- enr_2007 |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
   arrange(desc(n_students)) |>
   head(8) |>
   select(district_name, n_students)
 
+stopifnot(nrow(top_districts) > 0)
 top_districts
-#> # A tibble: 0 x 2
-#> # i 2 variables: district_name <chr>, n_students <dbl>
-```
-
-```r
-top_districts |>
-  mutate(district_name = forcats::fct_reorder(district_name, n_students)) |>
-  ggplot(aes(x = n_students, y = district_name, fill = district_name)) +
-  geom_col(show.legend = FALSE) +
-  geom_text(aes(label = scales::comma(n_students)), hjust = -0.1) +
-  scale_x_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.15))) +
-  scale_fill_viridis_d(option = "plasma", begin = 0.2, end = 0.8) +
-  labs(
-    title = "Wyoming's Largest School Districts (2024)",
-    subtitle = "Natrona (Casper) and Laramie (Cheyenne) lead the state",
-    x = "Number of Students",
-    y = NULL
-  )
+#>   district_name n_students
+#> 1    Laramie #1      12776
+#> 2    Natrona #1      11604
+#> 3   Campbell #1       7589
+#> 4 Sweetwater #1       4742
+#> 5     Albany #1       3507
+#> 6   Sheridan #2       3080
+#> 7      Uinta #1       2799
+#> 8 Sweetwater #2       2599
 ```
 
 ![Top Wyoming districts](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/top-districts-chart-1.png)
 
 ---
 
-### 4. Wind River Reservation schools serve Native American students
+### 3. Sublette County exploded 47% as natural gas boomed
 
-The Eastern Shoshone and Northern Arapaho nations on the Wind River Reservation represent Wyoming's largest Native American population, concentrated in Fremont County.
-
-```r
-demographics <- enr_2024 |>
-  filter(is_state, grade_level == "TOTAL",
-         subgroup %in% c("white", "native_american", "hispanic", "asian", "black")) |>
-  mutate(total = sum(n_students),
-         pct = round(n_students / total * 100, 1)) |>
-  select(subgroup, n_students, pct) |>
-  arrange(desc(n_students))
-
-demographics
-#> # A tibble: 0 x 3
-#> # i 3 variables: subgroup <chr>, n_students <dbl>, pct <dbl>
-```
+Sublette #1 (Pinedale) grew from 639 to 940 students between 2000 and 2007 -- the fastest growth in the state -- fueled by the Jonah and Pinedale Anticline gas fields.
 
 ```r
-demographics |>
-  mutate(subgroup = forcats::fct_reorder(subgroup, n_students)) |>
-  ggplot(aes(x = n_students, y = subgroup, fill = subgroup)) +
-  geom_col(show.legend = FALSE) +
-  geom_text(aes(label = paste0(pct, "%")), hjust = -0.1) +
-  scale_x_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.15))) +
-  scale_fill_brewer(palette = "Set2") +
-  labs(
-    title = "Wyoming Student Demographics (2024)",
-    subtitle = "Wind River Reservation drives Native American enrollment",
-    x = "Number of Students",
-    y = NULL
-  )
+sublette <- enr |>
+  filter(is_district, district_name == "Sublette #1",
+         subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(end_year, n_students) |>
+  mutate(pct_change = round((n_students / lag(n_students) - 1) * 100, 1))
+
+stopifnot(nrow(sublette) > 0)
+sublette
+#>   end_year n_students pct_change
+#> 1     2000        639         NA
+#> 2     2001        630       -1.4
+#> 3     2002        671        6.5
+#> 4     2003        689        2.7
+#> 5     2004        701        1.7
+#> 6     2005        767        9.4
+#> 7     2006        841        9.6
+#> 8     2007        940       11.8
 ```
 
-![Wyoming student demographics](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/demographics-chart-1.png)
+![Sublette County enrollment](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/sublette-chart-1.png)
+
+When the Jonah gas field ramped up production, Pinedale transformed from a quiet ranching town into a boomtown.
 
 ---
 
-### 5. Fremont County: Heart of Wind River country
+### 4. Fremont County lost 14% of its students in seven years
 
-Fremont County School Districts, serving communities around Lander, Riverton, and the Wind River Reservation, have distinct enrollment patterns.
+Home to the Wind River Reservation, Fremont County's six school districts shed nearly 1,000 students between 2000 and 2007 -- the steepest county-level decline in the state.
 
 ```r
-enr_multi <- fetch_enr_multi(2015:2024, use_cache = TRUE)
-
-fremont <- enr_multi |>
+fremont <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
-         grepl("Fremont", district_name, ignore.case = TRUE)) |>
+         grepl("Fremont", district_name)) |>
   group_by(end_year) |>
   summarize(total = sum(n_students, na.rm = TRUE)) |>
   mutate(pct_change = round((total / lag(total) - 1) * 100, 1))
 
+stopifnot(nrow(fremont) > 0)
 fremont
-#> # A tibble: 0 x 3
-#> # i 3 variables: end_year <int>, total <dbl>, pct_change <dbl>
+#> # A tibble: 8 x 3
+#>   end_year total pct_change
+#>      <int> <dbl>      <dbl>
+#> 1     2000  7273       NA
+#> 2     2001  6639       -8.7
+#> 3     2002  6504       -2.0
+#> 4     2003  6344       -2.5
+#> 5     2004  6299       -0.7
+#> 6     2005  6373        1.2
+#> 7     2006  6360       -0.2
+#> 8     2007  6280       -1.3
 ```
 
-```r
-ggplot(fremont, aes(x = end_year, y = total)) +
-  geom_line(linewidth = 1.2, color = "#8B4513") +
-  geom_point(size = 3, color = "#8B4513") +
-  scale_y_continuous(labels = scales::comma) +
-  labs(
-    title = "Fremont County Enrollment (2015-2024)",
-    subtitle = "Wind River Reservation region enrollment trends",
-    x = "School Year",
-    y = "Total Enrollment"
-  )
-```
-
-![Fremont County enrollment](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/regional-chart-1.png)
+![Fremont County enrollment](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/fremont-chart-1.png)
 
 ---
 
-### 6. Campbell County's coal country exodus
+### 5. Fremont #38 (Wind River Reservation) lost 39% of its students
 
-Gillette and Campbell County saw massive enrollment declines as coal production fell. The Powder River Basin's bust reshaped local schools.
+Among individual districts, Fremont #38 experienced the most severe decline: from 538 students in 2000 to just 328 by 2007.
 
 ```r
-campbell <- enr_multi |>
+fremont_districts <- enr |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
+         grepl("Fremont", district_name)) |>
+  select(end_year, district_name, n_students)
+
+stopifnot(nrow(fremont_districts) > 0)
+fremont_districts |>
+  filter(end_year %in% c(2000, 2007)) |>
+  pivot_wider(names_from = end_year, values_from = n_students) |>
+  mutate(change = `2007` - `2000`,
+         pct_change = round((`2007` / `2000` - 1) * 100, 1)) |>
+  arrange(pct_change)
+#>   district_name `2000` `2007` change pct_change
+#> 1   Fremont #38    538    328   -210      -39.0
+#> 2   Fremont #21    530    377   -153      -28.9
+#> 3    Fremont #2    291    228    -63      -21.6
+#> 4   Fremont #14    647    527   -120      -18.5
+#> 5    Fremont #6   1850   1649   -201      -10.9
+#> 6   Fremont #25   2876   2828    -48       -1.7
+#> 7   Fremont #24    341    343      2        0.6
+```
+
+![Fremont County districts](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/fremont38-chart-1.png)
+
+---
+
+### 6. Campbell County: Coal kept Gillette stable while the rest of Wyoming shrank
+
+Campbell #1 (Gillette) held nearly steady at ~7,400 students even as the state lost 7%. The Powder River Basin coal economy provided stability -- a pattern that would reverse dramatically in later years as coal declined.
+
+```r
+campbell <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
          grepl("Campbell", district_name)) |>
   select(end_year, district_name, n_students)
@@ -263,68 +246,178 @@ campbell_summary <- campbell |>
   summarize(total = sum(n_students, na.rm = TRUE)) |>
   mutate(pct_change = round((total / lag(total) - 1) * 100, 1))
 
+stopifnot(nrow(campbell_summary) > 0)
 campbell_summary
-#> # A tibble: 0 x 3
-#> # i 3 variables: end_year <int>, total <dbl>, pct_change <dbl>
-```
-
-```r
-ggplot(campbell_summary, aes(x = end_year, y = total)) +
-  geom_line(linewidth = 1.2, color = "#2F4F4F") +
-  geom_point(size = 3, color = "#2F4F4F") +
-  scale_y_continuous(labels = scales::comma) +
-  labs(
-    title = "Campbell County (Gillette) Enrollment (2015-2024)",
-    subtitle = "Coal decline drives population loss",
-    x = "School Year",
-    y = "Total Enrollment"
-  )
+#> # A tibble: 8 x 3
+#>   end_year total pct_change
+#>      <int> <dbl>      <dbl>
+#> 1     2000  7488       NA
+#> 2     2001  7441       -0.6
+#> 3     2002  7368       -1.0
+#> 4     2003  7234       -1.8
+#> 5     2004  7198       -0.5
+#> 6     2005  7337        1.9
+#> 7     2006  7617        3.8
+#> 8     2007  7589       -0.4
 ```
 
 ![Campbell County enrollment](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/campbell-chart-1.png)
 
 ---
 
-### 7. Teton County is the exception: Ski town growth
+### 7. Kindergarten overtook 12th grade: Wyoming's demographic crossover
 
-Jackson Hole bucks Wyoming's trends with population growth driven by tourism, remote workers, and outdoor recreation.
+In 2000, Wyoming graduated 6,851 seniors but enrolled only 5,825 kindergartners. By 2007 the pipeline had flipped: 6,891 kindergartners vs 6,212 12th graders. The state was getting younger at the bottom.
 
 ```r
-teton <- enr_multi |>
+k_vs_12 <- enr |>
+  filter(is_state, subgroup == "total_enrollment", grade_level %in% c("K", "12")) |>
+  select(end_year, grade_level, n_students) |>
+  pivot_wider(names_from = grade_level, values_from = n_students)
+
+stopifnot(nrow(k_vs_12) > 0)
+k_vs_12
+#> # A tibble: 8 x 3
+#>   end_year     K  `12`
+#>      <int> <dbl> <dbl>
+#> 1     2000  5825  6851
+#> 2     2001  6002  6832
+#> 3     2002  6165  6582
+#> 4     2003  6224  6451
+#> 5     2004  6263  6272
+#> 6     2005  6381  6042
+#> 7     2006  6575  6146
+#> 8     2007  6891  6212
+```
+
+![Kindergarten vs 12th grade](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/k-12-chart-1.png)
+
+---
+
+### 8. Wyoming consolidated 28 schools in seven years
+
+From 382 schools in 2000 to 354 in 2007, Wyoming lost 7% of its school buildings. Rural school consolidation was reshaping the education landscape even as enrollment began recovering.
+
+```r
+school_counts <- enr |>
+  filter(is_school, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  group_by(end_year) |>
+  summarize(n_schools = n(), total_students = sum(n_students, na.rm = TRUE)) |>
+  mutate(avg_size = round(total_students / n_schools))
+
+stopifnot(nrow(school_counts) > 0)
+school_counts
+#> # A tibble: 8 x 4
+#>   end_year n_schools total_students avg_size
+#>      <int>     <int>          <dbl>    <dbl>
+#> 1     2000       382          90065      236
+#> 2     2001       378          87897      233
+#> 3     2002       377          86116      228
+#> 4     2003       367          84739      231
+#> 5     2004       361          83772      232
+#> 6     2005       362          83705      231
+#> 7     2006       359          84611      236
+#> 8     2007       354          85578      242
+```
+
+![School count trend](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/school-count-chart-1.png)
+
+---
+
+### 9. Sweetwater County's twin cities: Rock Springs held, Green River shrank
+
+Rock Springs (Sweetwater #1) and Green River (Sweetwater #2) are 15 miles apart but had different enrollment trajectories. Rock Springs recovered by 2007; Green River kept declining.
+
+```r
+sweetwater <- enr |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
+         grepl("Sweetwater", district_name)) |>
+  select(end_year, district_name, n_students)
+
+stopifnot(nrow(sweetwater) > 0)
+sweetwater
+#>    end_year   district_name n_students
+#> 1      2000  Sweetwater #1       4665
+#> 2      2000  Sweetwater #2       2928
+#> 3      2001  Sweetwater #1       4401
+#> ...
+```
+
+![Sweetwater County districts](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/sweetwater-chart-1.png)
+
+---
+
+### 10. Teton County (Jackson Hole) stayed flat while the rest of Wyoming shrank
+
+In a state where most districts were losing students, Teton #1 held steady around 2,200-2,400 -- Jackson's tourism and recreation economy insulated it from the broader decline.
+
+```r
+teton <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
          grepl("Teton", district_name)) |>
   select(end_year, district_name, n_students)
 
+stopifnot(nrow(teton) > 0)
 teton
-#> # A tibble: 0 x 3
-#> # i 3 variables: end_year <int>, district_name <chr>, n_students <dbl>
+#>   end_year district_name n_students
+#> 1     2000      Teton #1       2366
+#> 2     2001      Teton #1       2209
+#> 3     2002      Teton #1       2248
+#> 4     2003      Teton #1       2296
+#> 5     2004      Teton #1       2270
+#> 6     2005      Teton #1       2265
+#> 7     2006      Teton #1       2219
+#> 8     2007      Teton #1       2270
 ```
 
-```r
-teton |>
-  ggplot(aes(x = end_year, y = n_students, color = district_name)) +
-  geom_line(linewidth = 1.2) +
-  geom_point(size = 2) +
-  scale_y_continuous(labels = scales::comma) +
-  labs(
-    title = "Teton County (Jackson) Enrollment (2015-2024)",
-    subtitle = "Ski town growth defies statewide trends",
-    x = "School Year",
-    y = "Enrollment",
-    color = "District"
-  )
-```
-
-![Teton County enrollment](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/growth-chart-1.png)
+![Teton County enrollment](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/teton-chart-1.png)
 
 ---
 
-### 8. Vast distances define Wyoming education
+### 11. Elementary enrollment grew while high school shrank
 
-Wyoming's 48 school districts serve 97,000 square miles - the 10th largest state. Many districts cover areas larger than some eastern states.
+Between 2000 and 2007, elementary (K-5) enrollment rose from 38,545 to 39,336 (+2%) while high school (9-12) dropped from 30,172 to 26,839 (-11%). The pipeline was filling from the bottom.
 
 ```r
-n_districts <- enr_2024 |>
+elem <- enr |>
+  filter(is_state, subgroup == "total_enrollment",
+         grade_level %in% c("K", "01", "02", "03", "04", "05")) |>
+  group_by(end_year) |>
+  summarize(students = sum(n_students)) |>
+  mutate(level = "Elementary (K-5)")
+
+hs <- enr |>
+  filter(is_state, subgroup == "total_enrollment",
+         grade_level %in% c("09", "10", "11", "12")) |>
+  group_by(end_year) |>
+  summarize(students = sum(n_students)) |>
+  mutate(level = "High School (9-12)")
+
+elem_hs <- bind_rows(elem, hs)
+
+stopifnot(nrow(elem_hs) > 0)
+elem_hs
+#> # A tibble: 16 x 3
+#>   end_year students level
+#>      <int>    <dbl> <chr>
+#> 1     2000    38545 Elementary (K-5)
+#> 2     2001    37827 Elementary (K-5)
+#> ...
+#> 9     2000    30172 High School (9-12)
+#> 10    2001    28863 High School (9-12)
+#> ...
+```
+
+![Elementary vs high school](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/elem-hs-chart-1.png)
+
+---
+
+### 12. Vast distances define Wyoming education: 48 districts across 97,000 square miles
+
+Wyoming's 48 school districts average about 1,780 students each, but cover an average of 2,000 square miles per district. Many districts are geographically larger than some eastern states.
+
+```r
+n_districts <- enr_2007 |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
   summarize(
     n_districts = n(),
@@ -332,23 +425,24 @@ n_districts <- enr_2024 |>
     avg_per_district = round(total_students / n_districts)
   )
 
+stopifnot(nrow(n_districts) > 0)
 n_districts
 #> # A tibble: 1 x 3
 #>   n_districts total_students avg_per_district
 #>         <int>          <dbl>            <dbl>
-#> 1           0              0              NaN
+#> 1          48          85578             1783
 ```
 
-With an average of around 2,000 students per district, Wyoming's districts are intimate by national standards but geographically immense.
+With an average of fewer than 1,800 students per district, Wyoming's districts are intimate by national standards but geographically immense.
 
 ---
 
-### 9. Small schools are the Wyoming norm
+### 13. Small schools are the Wyoming norm: 109 schools have under 100 students
 
-Dozens of Wyoming schools serve fewer than 100 students, keeping education local in remote ranching and farming communities.
+In 2007, 109 out of 354 schools (31%) served fewer than 100 students. Wyoming pays to keep tiny schools open across the frontier rather than bus children hours to a larger campus.
 
 ```r
-school_sizes <- enr_2024 |>
+school_sizes <- enr_2007 |>
   filter(is_school, subgroup == "total_enrollment", grade_level == "TOTAL") |>
   mutate(size_category = case_when(
     n_students < 50 ~ "Under 50",
@@ -361,150 +455,26 @@ school_sizes <- enr_2024 |>
   mutate(size_category = factor(size_category,
          levels = c("Under 50", "50-99", "100-249", "250-499", "500+")))
 
+stopifnot(nrow(school_sizes) > 0)
 school_sizes
-#> # A tibble: 0 x 2
-#> # i 2 variables: size_category <fct>, n_schools <int>
+#>   size_category n_schools
+#> 1     Under 50        73
+#> 2        50-99        36
+#> 3      100-249       105
+#> 4      250-499       109
+#> 5         500+        31
 ```
+
+![School size distribution](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/small-schools-chart-1.png)
 
 ---
 
-### 10. Kindergarten trends signal the future
+### 14. Grade-level enrollment: 9th grade bulge reflects the demographic pipeline
 
-Kindergarten enrollment is the leading indicator for future enrollment. Wyoming's K numbers reveal what's coming.
-
-```r
-k_vs_12 <- enr_multi |>
-  filter(is_state, subgroup == "total_enrollment", grade_level %in% c("K", "12")) |>
-  select(end_year, grade_level, n_students) |>
-  pivot_wider(names_from = grade_level, values_from = n_students)
-
-k_vs_12
-#> # A tibble: 0 x 1
-#> # i 1 variable: end_year <int>
-```
-
-When kindergarten classes shrink, elementary, middle, and high schools will follow. Energy economy volatility makes Wyoming's pipeline particularly unpredictable.
-
----
-
-### 11. Hispanic enrollment is growing across Wyoming
-
-Wyoming's Hispanic population has grown steadily, reshaping school demographics in communities from Cheyenne to Rock Springs.
+The 2007 grade-level snapshot shows a pronounced 9th grade bulge (7,069 students) that shrinks to 6,212 by 12th grade -- a pattern suggesting either dropouts or outmigration in the upper grades.
 
 ```r
-hispanic_trend <- enr_multi |>
-  filter(is_state, subgroup == "hispanic", grade_level == "TOTAL") |>
-  select(end_year, n_students) |>
-  mutate(yoy_change = round((n_students / lag(n_students) - 1) * 100, 1))
-
-hispanic_trend
-```
-
-```r
-ggplot(hispanic_trend, aes(x = end_year, y = n_students)) +
-  geom_line(linewidth = 1.2, color = "#E69F00") +
-  geom_point(size = 3, color = "#E69F00") +
-  scale_y_continuous(labels = scales::comma) +
-  labs(
-    title = "Hispanic Student Enrollment in Wyoming (2015-2024)",
-    subtitle = "Steady growth reshaping school demographics statewide",
-    x = "School Year",
-    y = "Hispanic Students"
-  )
-```
-
-![Hispanic enrollment trend](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/hispanic-chart-1.png)
-
----
-
-### 12. Sweetwater County: Rock Springs and Green River diverge
-
-Sweetwater County's two districts -- Rock Springs (SD #1) and Green River (SD #2) -- tell different stories about energy-dependent communities.
-
-```r
-sweetwater <- enr_multi |>
-  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
-         grepl("Sweetwater", district_name)) |>
-  select(end_year, district_name, n_students)
-
-sweetwater
-```
-
-```r
-sweetwater |>
-  ggplot(aes(x = end_year, y = n_students, color = district_name)) +
-  geom_line(linewidth = 1.2) +
-  geom_point(size = 2) +
-  scale_y_continuous(labels = scales::comma) +
-  labs(
-    title = "Sweetwater County Districts (2015-2024)",
-    subtitle = "Rock Springs and Green River: two towns, two trajectories",
-    x = "School Year",
-    y = "Enrollment",
-    color = "District"
-  )
-```
-
-![Sweetwater County districts](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/sweetwater-chart-1.png)
-
----
-
-### 13. Economically disadvantaged students across Wyoming
-
-The share of students qualifying as economically disadvantaged reveals which communities face the greatest financial pressures.
-
-```r
-econ_wide <- enr_2024 |>
-  filter(is_district, grade_level == "TOTAL",
-         subgroup %in% c("total_enrollment", "econ_disadv")) |>
-  select(district_name, subgroup, n_students) |>
-  pivot_wider(names_from = subgroup, values_from = n_students)
-
-# Handle case where econ_disadv subgroup is not available in the data
-if (all(c("econ_disadv", "total_enrollment") %in% names(econ_wide))) {
-  econ <- econ_wide |>
-    mutate(pct_econ_disadv = round(econ_disadv / total_enrollment * 100, 1)) |>
-    filter(!is.na(pct_econ_disadv)) |>
-    arrange(desc(pct_econ_disadv)) |>
-    head(10)
-} else {
-  econ <- tibble(
-    district_name = character(),
-    total_enrollment = numeric(),
-    econ_disadv = numeric(),
-    pct_econ_disadv = numeric()
-  )
-}
-
-econ
-```
-
-```r
-econ |>
-  mutate(district_name = forcats::fct_reorder(district_name, pct_econ_disadv)) |>
-  ggplot(aes(x = pct_econ_disadv, y = district_name, fill = pct_econ_disadv)) +
-  geom_col(show.legend = FALSE) +
-  geom_text(aes(label = paste0(pct_econ_disadv, "%")), hjust = -0.1) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.15))) +
-  scale_fill_gradient(low = "#56B4E9", high = "#D55E00") +
-  labs(
-    title = "Highest Economically Disadvantaged Rates by District (2024)",
-    subtitle = "Reservation and rural districts face greatest financial pressure",
-    x = "% Economically Disadvantaged",
-    y = NULL
-  )
-```
-
-![Economically disadvantaged rates](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/econ-disadv-chart-1.png)
-
----
-
-### 14. Grade-level enrollment reveals Wyoming's demographic pipeline
-
-Comparing enrollment by individual grade shows whether the student population is growing or shrinking from bottom to top.
-
-```r
-grade_enr <- enr_2024 |>
+grade_enr <- enr_2007 |>
   filter(is_state, subgroup == "total_enrollment",
          grade_level %in% c("K", "01", "02", "03", "04", "05",
                             "06", "07", "08", "09", "10", "11", "12")) |>
@@ -513,55 +483,52 @@ grade_enr <- enr_2024 |>
          levels = c("K", "01", "02", "03", "04", "05",
                     "06", "07", "08", "09", "10", "11", "12")))
 
+stopifnot(nrow(grade_enr) > 0)
 grade_enr
-```
-
-```r
-ggplot(grade_enr, aes(x = grade_level, y = n_students, fill = grade_level)) +
-  geom_col(show.legend = FALSE) +
-  geom_text(aes(label = scales::comma(n_students)), vjust = -0.3, size = 3) +
-  scale_y_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.1))) +
-  scale_fill_viridis_d(option = "viridis") +
-  labs(
-    title = "Wyoming Enrollment by Grade Level (2024)",
-    subtitle = "Grade-by-grade snapshot of the K-12 pipeline",
-    x = "Grade Level",
-    y = "Number of Students"
-  )
+#>    grade_level n_students
+#> 1            K       6891
+#> 2           01       6565
+#> 3           02       6512
+#> 4           03       6485
+#> 5           04       6489
+#> 6           05       6394
+#> 7           06       6416
+#> 8           07       6321
+#> 9           08       6666
+#> 10          09       7069
+#> 11          10       7160
+#> 12          11       6398
+#> 13          12       6212
 ```
 
 ![Grade level enrollment](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/grade-level-chart-1.png)
 
 ---
 
-### 15. The smallest districts: One-school towns keeping Wyoming educated
+### 15. The smallest districts: Washakie #2 has just 96 students
 
-Many Wyoming districts serve fewer than 200 students total, keeping schools open in remote ranching communities where the nearest neighbor might be miles away.
+Wyoming keeps schools open in communities so small that the entire district could fit in a single classroom. Washakie #2 (Ten Sleep) enrolled 96 students in 2007; Sheridan #3 (Clearmont) had 101.
 
 ```r
-smallest <- enr_2024 |>
+smallest <- enr_2007 |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
   arrange(n_students) |>
   head(10) |>
   select(district_name, n_students)
 
+stopifnot(nrow(smallest) > 0)
 smallest
-```
-
-```r
-smallest |>
-  mutate(district_name = forcats::fct_reorder(district_name, n_students)) |>
-  ggplot(aes(x = n_students, y = district_name, fill = district_name)) +
-  geom_col(show.legend = FALSE) +
-  geom_text(aes(label = scales::comma(n_students)), hjust = -0.1) +
-  scale_x_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.2))) +
-  scale_fill_viridis_d(option = "mako", begin = 0.3, end = 0.8) +
-  labs(
-    title = "Wyoming's Smallest School Districts (2024)",
-    subtitle = "One-school towns keeping education local in the rural West",
-    x = "Number of Students",
-    y = NULL
-  )
+#>    district_name n_students
+#> 1    Washakie #2         96
+#> 2    Sheridan #3        101
+#> 3       Park #16        124
+#> 4     Fremont #2        228
+#> 5      Platte #2        229
+#> 6      Weston #7        270
+#> 7    Big Horn #4        328
+#> 8    Fremont #38        328
+#> 9    Fremont #24        343
+#> 10   Niobrara #1        364
 ```
 
 ![Smallest Wyoming districts](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/smallest-districts-chart-1.png)
@@ -574,45 +541,38 @@ smallest |>
 
 | Column | Description |
 |--------|-------------|
-| `end_year` | School year end (e.g., 2024 for 2023-24) |
-| `district_id` | 7-digit district ID |
-| `campus_id` | 7-digit school ID |
-| `type` | "State", "District", or "Campus" |
+| `end_year` | School year end (e.g., 2007 for 2006-07) |
+| `district_id` | District ID |
+| `campus_id` | School ID |
+| `type` | "State", "District", or "School" |
 | `district_name`, `campus_name` | Names |
 | `grade_level` | "TOTAL", "K", "01"..."12" |
 | `subgroup` | Demographic group |
 | `n_students` | Enrollment count |
 | `pct` | Percentage of total |
 
-### Subgroups Available (2008+)
+### Subgroups Available
 
-**Demographics**: `white`, `black`, `hispanic`, `asian`, `pacific_islander`, `native_american`, `multiracial`
-
-**Gender**: `male`, `female`
-
-**Populations**: `econ_disadv`, `lep`, `special_ed`
+**PDF Era (2000-2007)**: `total_enrollment` only (grade-level totals; no demographic breakdowns)
 
 ---
 
 ## Data Notes
 
-- **Source**: [Wyoming Department of Education](https://edu.wyoming.gov/data/) and [WDE Reporting](https://reporting.edu.wyo.gov/)
-- **Available years**: 2000-2024 (25 years)
+- **Source**: [Wyoming Department of Education](https://edu.wyoming.gov/)
+- **Available years**: 2000-2007 (PDF era)
 - **PDF Era (2000-2007)**: Grade-level totals only, no demographic breakdowns
-- **Modern Era (2008-2024)**: Full demographic and special population breakdowns from WDE reporting portal
-- **Entities**: ~360 schools across 48 districts, plus state-level aggregates
+- **Modern Era (2008+)**: The WDE reporting portal (reporting.edu.wyo.gov) currently returns HTTP 403 errors, making modern era data inaccessible
+- **Entities**: ~354-382 schools across 48 districts, plus state-level aggregates
 - **Census Day**: October 1 enrollment counts (Wyoming's official count date)
 - **Suppression**: Small cell sizes may be suppressed by WDE in source data
-- **Known issues**: The WDE reporting portal (reporting.edu.wyo.gov) currently returns HTTP 403 errors, making modern era data (2008+) inaccessible. Use `use_cache = TRUE` for stability. PDF-era data (2000-2007) downloads are still functional.
 
 ## Data Availability
 
-| Era | Years | Source |
-|-----|-------|--------|
-| PDF Era | 2000-2007 | edu.wyoming.gov (grade totals only) |
-| Modern Era | 2008-2024 | reporting.edu.wyo.gov (full demographics) |
-
-**25 years total** across ~360 schools and 48 districts.
+| Era | Years | Source | Subgroups |
+|-----|-------|--------|-----------|
+| PDF Era | 2000-2007 | edu.wyoming.gov | total_enrollment only |
+| Modern Era | 2008+ | reporting.edu.wyo.gov | Not currently accessible (HTTP 403) |
 
 ---
 
