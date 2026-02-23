@@ -15,8 +15,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   fig.width = 8,
   fig.height = 5,
-  eval = TRUE,
-  cache = TRUE
+  eval = TRUE
 )
 ```
 
@@ -27,6 +26,31 @@ library(tidyr)
 library(ggplot2)
 
 theme_set(theme_minimal(base_size = 14))
+
+# Load pre-computed data bundled with the package.
+# This ensures vignettes build reliably in CI without network access.
+# Falls back to live fetch if bundled data is unavailable.
+enr <- tryCatch(
+  readRDS(system.file("extdata", "enr_2000_2007_tidy.rds", package = "wyschooldata")),
+  error = function(e) {
+    warning("Bundled data not found, fetching live data")
+    fetch_enr_multi(2000:2007, use_cache = TRUE)
+  }
+)
+if (is.null(enr) || nrow(enr) == 0) {
+  enr <- fetch_enr_multi(2000:2007, use_cache = TRUE)
+}
+
+enr_2007 <- tryCatch(
+  readRDS(system.file("extdata", "enr_2007_tidy.rds", package = "wyschooldata")),
+  error = function(e) {
+    warning("Bundled data not found, fetching live data")
+    fetch_enr(2007, use_cache = TRUE)
+  }
+)
+if (is.null(enr_2007) || nrow(enr_2007) == 0) {
+  enr_2007 <- fetch_enr(2007, use_cache = TRUE)
+}
 ```
 
 This vignette explores Wyoming's public school enrollment data from the PDF era (2000-2007), the years currently available through Wyoming Department of Education downloads. Wyoming, America's least populous state, offers a unique window into how energy economics shape rural education.
@@ -38,8 +62,6 @@ This vignette explores Wyoming's public school enrollment data from the PDF era 
 Statewide enrollment fell from 90,065 in 2000 to a low of 83,705 in 2005 before recovering to 85,578 in 2007 -- a pattern driven by energy sector volatility.
 
 ```{r statewide-data}
-enr <- fetch_enr_multi(2000:2007, use_cache = TRUE)
-
 state_totals <- enr |>
   filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
   select(end_year, n_students) |>
@@ -72,8 +94,6 @@ For context: Denver Public Schools alone serves more students than all of Wyomin
 Laramie #1 (Cheyenne) and Natrona #1 (Casper) serve more than half the state, making Wyoming a two-city school system surrounded by vast emptiness.
 
 ```{r top-districts-data}
-enr_2007 <- fetch_enr(2007, use_cache = TRUE)
-
 top_districts <- enr_2007 |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
   arrange(desc(n_students)) |>

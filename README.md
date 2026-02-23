@@ -82,8 +82,6 @@ The stories below are reproduced from the [enrollment hooks vignette](https://al
 Statewide enrollment fell from 90,065 in 2000 to a low of 83,705 in 2005 before recovering to 85,578 in 2007 -- a pattern driven by energy sector volatility.
 
 ```r
-enr <- fetch_enr_multi(2000:2007, use_cache = TRUE)
-
 state_totals <- enr |>
   filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
   select(end_year, n_students) |>
@@ -114,8 +112,6 @@ For context: Denver Public Schools alone serves more students than all of Wyomin
 Laramie #1 (Cheyenne) and Natrona #1 (Casper) serve more than half the state, making Wyoming a two-city school system surrounded by vast emptiness.
 
 ```r
-enr_2007 <- fetch_enr(2007, use_cache = TRUE)
-
 top_districts <- enr_2007 |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
   arrange(desc(n_students)) |>
