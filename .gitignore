@@ -41,6 +41,7 @@ docs/
 
 # Compiled bytecode
 *.rds
+!inst/extdata/*.rds
 
 # MacOS
 .DS_Store
