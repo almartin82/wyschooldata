@@ -181,7 +181,7 @@ a quiet ranching town into a boomtown.
 
 ## 4. Fremont County lost 14% of its students in seven years
 
-Home to the Wind River Reservation, Fremont County’s six school
+Home to the Wind River Reservation, Fremont County’s eight school
 districts shed nearly 1,000 students between 2000 and 2007 – the
 steepest county-level decline in the state.
 
