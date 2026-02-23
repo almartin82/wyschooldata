@@ -127,7 +127,7 @@ top_districts
 #> 4 Sweetwater #1       4742
 #> 5     Albany #1       3507
 #> 6   Sheridan #2       3080
-#> 7      Uinta #1       2799
+#> 7      Uinta #1       2944
 #> 8 Sweetwater #2       2599
 ```
 
@@ -167,7 +167,7 @@ When the Jonah gas field ramped up production, Pinedale transformed from a quiet
 
 ### 4. Fremont County lost 14% of its students in seven years
 
-Home to the Wind River Reservation, Fremont County's six school districts shed nearly 1,000 students between 2000 and 2007 -- the steepest county-level decline in the state.
+Home to the Wind River Reservation, Fremont County's eight school districts shed nearly 1,000 students between 2000 and 2007 -- the steepest county-level decline in the state.
 
 ```r
 fremont <- enr |>
@@ -218,9 +218,10 @@ fremont_districts |>
 #> 2   Fremont #21    530    377   -153      -28.9
 #> 3    Fremont #2    291    228    -63      -21.6
 #> 4   Fremont #14    647    527   -120      -18.5
-#> 5    Fremont #6   1850   1649   -201      -10.9
-#> 6   Fremont #25   2876   2828    -48       -1.7
-#> 7   Fremont #24    341    343      2        0.6
+#> 5    Fremont #1   1996   1734   -262      -13.1
+#> 6   Fremont #25   2540   2355   -185       -7.3
+#> 7    Fremont #6    390    388     -2       -0.5
+#> 8   Fremont #24    341    343      2        0.6
 ```
 
 ![Fremont County districts](https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/fremont38-chart-1.png)
