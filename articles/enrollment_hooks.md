@@ -88,11 +88,10 @@ of Wyoming.
 
 ------------------------------------------------------------------------
 
-## 2. Cheyenne and Casper together educate 57% of Wyoming students
+## 2. Cheyenne and Casper together educate 29% of Wyoming students
 
-Laramie \#1 (Cheyenne) and Natrona \#1 (Casper) serve more than half the
-state, making Wyoming a two-city school system surrounded by vast
-emptiness.
+Laramie \#1 (Cheyenne) and Natrona \#1 (Casper) serve nearly a third of
+the state – Wyoming’s two largest districts in a landscape of 48 others.
 
 ``` r
 top_districts <- enr_2007 |>
@@ -762,7 +761,8 @@ Wyoming’s 2000-2007 school enrollment data reveals:
 - **America’s smallest system**: Under 90,000 students statewide
 - **Energy-driven volatility**: State enrollment fell 7% before
   recovering with the gas boom
-- **Two-city state**: Cheyenne and Casper together serve 57% of students
+- **Two-city dominance**: Cheyenne and Casper together serve 29% of
+  students
 - **Gas boom town**: Sublette County (Pinedale) grew 47% as natural gas
   production surged
 - **Reservation decline**: Fremont County lost 14% of students, with

@@ -120,11 +120,10 @@ of Wyoming.
 
 ------------------------------------------------------------------------
 
-### 2. Cheyenne and Casper together educate 57% of Wyoming students
+### 2. Cheyenne and Casper together educate 29% of Wyoming students
 
-Laramie \#1 (Cheyenne) and Natrona \#1 (Casper) serve more than half the
-state, making Wyoming a two-city school system surrounded by vast
-emptiness.
+Laramie \#1 (Cheyenne) and Natrona \#1 (Casper) serve nearly a third of
+the state – Wyoming’s two largest districts in a landscape of 48 others.
 
 ``` r
 top_districts <- enr_2007 |>
