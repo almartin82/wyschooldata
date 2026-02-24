@@ -155,9 +155,9 @@
 <hr>
 </div>
 <div class="section level3">
-<h3 id="id_2-cheyenne-and-casper-together-educate-29-of-wyoming-students">2. Cheyenne and Casper together educate 29% of Wyoming students<a class="anchor" aria-label="anchor" href="#id_2-cheyenne-and-casper-together-educate-29-of-wyoming-students"></a>
+<h3 id="id_2-cheyenne-and-casper-together-educate-57-of-wyoming-students">2. Cheyenne and Casper together educate 57% of Wyoming students<a class="anchor" aria-label="anchor" href="#id_2-cheyenne-and-casper-together-educate-57-of-wyoming-students"></a>
 </h3>
-<p>Laramie #1 (Cheyenne) and Natrona #1 (Casper) serve nearly a third of the state – Wyoming’s two largest districts in a landscape of 48 others.</p>
+<p>Laramie #1 (Cheyenne) and Natrona #1 (Casper) serve more than half the state, making Wyoming a two-city school system surrounded by vast emptiness.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">top_districts</span> <span class="op">&lt;-</span> <span class="va">enr_2007</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -174,7 +174,7 @@
 <span><span class="co">#&gt; 4 Sweetwater #1       4742</span></span>
 <span><span class="co">#&gt; 5     Albany #1       3507</span></span>
 <span><span class="co">#&gt; 6   Sheridan #2       3080</span></span>
-<span><span class="co">#&gt; 7      Uinta #1       2944</span></span>
+<span><span class="co">#&gt; 7      Uinta #1       2799</span></span>
 <span><span class="co">#&gt; 8 Sweetwater #2       2599</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/top-districts-chart-1.png" alt="Top Wyoming districts"><div class="figcaption">Top Wyoming districts</div>
@@ -212,7 +212,7 @@
 <div class="section level3">
 <h3 id="id_4-fremont-county-lost-14-of-its-students-in-seven-years">4. Fremont County lost 14% of its students in seven years<a class="anchor" aria-label="anchor" href="#id_4-fremont-county-lost-14-of-its-students-in-seven-years"></a>
 </h3>
-<p>Home to the Wind River Reservation, Fremont County’s eight school districts shed nearly 1,000 students between 2000 and 2007 – the steepest county-level decline in the state.</p>
+<p>Home to the Wind River Reservation, Fremont County’s six school districts shed nearly 1,000 students between 2000 and 2007 – the steepest county-level decline in the state.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fremont</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
@@ -261,10 +261,9 @@
 <span><span class="co">#&gt; 2   Fremont #21    530    377   -153      -28.9</span></span>
 <span><span class="co">#&gt; 3    Fremont #2    291    228    -63      -21.6</span></span>
 <span><span class="co">#&gt; 4   Fremont #14    647    527   -120      -18.5</span></span>
-<span><span class="co">#&gt; 5    Fremont #1   1996   1734   -262      -13.1</span></span>
-<span><span class="co">#&gt; 6   Fremont #25   2540   2355   -185       -7.3</span></span>
-<span><span class="co">#&gt; 7    Fremont #6    390    388     -2       -0.5</span></span>
-<span><span class="co">#&gt; 8   Fremont #24    341    343      2        0.6</span></span></code></pre></div>
+<span><span class="co">#&gt; 5    Fremont #6   1850   1649   -201      -10.9</span></span>
+<span><span class="co">#&gt; 6   Fremont #25   2876   2828    -48       -1.7</span></span>
+<span><span class="co">#&gt; 7   Fremont #24    341    343      2        0.6</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/wyschooldata/articles/enrollment_hooks_files/figure-html/fremont38-chart-1.png" alt="Fremont County districts"><div class="figcaption">Fremont County districts</div>
 </div>
