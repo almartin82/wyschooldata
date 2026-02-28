@@ -14,3 +14,4 @@
 ^EXPANSION\.md$
 ^check-output\.log$
 ^py.*schooldata$
+^DATA-CATEGORY-TAXONOMY\.md$
