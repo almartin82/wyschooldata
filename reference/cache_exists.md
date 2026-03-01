@@ -1,6 +1,7 @@
 # Check if cached data exists and is valid
 
-Check if cached data exists and is valid
+Checks the rappdirs cache first, then falls back to bundled package data
+for PDF-era years (2000-2007).
 
 ## Usage
 

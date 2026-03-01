@@ -1,6 +1,7 @@
 # Read data from cache
 
-Read data from cache
+Reads from rappdirs cache first, then falls back to bundled package
+data.
 
 ## Usage
 

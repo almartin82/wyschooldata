@@ -9,6 +9,7 @@
 <url><loc>https://almartin82.github.io/wyschooldata/articles/index.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/authors.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/index.html</loc></url>
+<url><loc>https://almartin82.github.io/wyschooldata/reference/bundled_data_exists.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/cache_exists.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/cache_status.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/clean_names.html</loc></url>
@@ -38,6 +39,7 @@
 <url><loc>https://almartin82.github.io/wyschooldata/reference/process_enr.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/process_enr_modern.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/process_enr_pdf.html</loc></url>
+<url><loc>https://almartin82.github.io/wyschooldata/reference/read_bundled_data.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/read_cache.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/safe_numeric.html</loc></url>
 <url><loc>https://almartin82.github.io/wyschooldata/reference/standardize_modern_columns.html</loc></url>
