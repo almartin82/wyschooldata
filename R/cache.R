@@ -42,6 +42,9 @@ get_cache_path <- function(end_year, type) {
 
 #' Check if cached data exists and is valid
 #'
+#' Checks the rappdirs cache first, then falls back to bundled package data
+#' for PDF-era years (2000-2007).
+#'
 #' @param end_year School year end
 #' @param type Data type ("tidy" or "wide")
 #' @param max_age Maximum age in days (default 30)
@@ -50,19 +53,40 @@ get_cache_path <- function(end_year, type) {
 cache_exists <- function(end_year, type, max_age = 30) {
   cache_path <- get_cache_path(end_year, type)
 
-  if (!file.exists(cache_path)) {
-    return(FALSE)
+  if (file.exists(cache_path)) {
+    # Check age
+    file_info <- file.info(cache_path)
+    age_days <- as.numeric(difftime(Sys.time(), file_info$mtime, units = "days"))
+    if (age_days <= max_age) return(TRUE)
   }
 
-  # Check age
-  file_info <- file.info(cache_path)
-  age_days <- as.numeric(difftime(Sys.time(), file_info$mtime, units = "days"))
+  # Fall back to bundled data for PDF-era years
+  bundled_data_exists(end_year, type)
+}
 
-  age_days <= max_age
+
+#' Check if bundled data exists for a given year and type
+#'
+#' Bundled data in inst/extdata contains verified PDF-era data (2000-2007).
+#'
+#' @param end_year School year end
+#' @param type Data type ("tidy" or "wide")
+#' @return TRUE if bundled data contains this year/type
+#' @keywords internal
+bundled_data_exists <- function(end_year, type) {
+  bundled_file <- system.file("extdata",
+                              paste0("enr_2000_2007_", type, ".rds"),
+                              package = "wyschooldata")
+  if (bundled_file == "" || !file.exists(bundled_file)) return(FALSE)
+
+  # Bundled file exists; check if it contains this year
+  end_year >= 2000 && end_year <= 2007
 }
 
 
 #' Read data from cache
+#'
+#' Reads from rappdirs cache first, then falls back to bundled package data.
 #'
 #' @param end_year School year end
 #' @param type Data type ("tidy" or "wide")
@@ -70,7 +94,45 @@ cache_exists <- function(end_year, type, max_age = 30) {
 #' @keywords internal
 read_cache <- function(end_year, type) {
   cache_path <- get_cache_path(end_year, type)
-  readRDS(cache_path)
+
+  # Try rappdirs cache first
+  if (file.exists(cache_path)) {
+    file_info <- file.info(cache_path)
+    age_days <- as.numeric(difftime(Sys.time(), file_info$mtime, units = "days"))
+    if (age_days <= 30) {
+      return(readRDS(cache_path))
+    }
+  }
+
+  # Fall back to bundled data
+  read_bundled_data(end_year, type)
+}
+
+
+#' Read bundled data for a given year
+#'
+#' Reads from the combined bundled RDS file and filters to the requested year.
+#'
+#' @param end_year School year end
+#' @param type Data type ("tidy" or "wide")
+#' @return Data frame for the requested year
+#' @keywords internal
+read_bundled_data <- function(end_year, type) {
+  bundled_file <- system.file("extdata",
+                              paste0("enr_2000_2007_", type, ".rds"),
+                              package = "wyschooldata")
+  if (bundled_file == "" || !file.exists(bundled_file)) {
+    stop("No bundled data available for year ", end_year, " type ", type)
+  }
+
+  all_data <- readRDS(bundled_file)
+  year_data <- all_data[all_data$end_year == end_year, ]
+
+  if (nrow(year_data) == 0) {
+    stop("Bundled data does not contain year ", end_year)
+  }
+
+  year_data
 }
 
 

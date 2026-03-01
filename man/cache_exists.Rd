@@ -17,6 +17,7 @@ cache_exists(end_year, type, max_age = 30)
 TRUE if valid cache exists
 }
 \description{
-Check if cached data exists and is valid
+Checks the rappdirs cache first, then falls back to bundled package data
+for PDF-era years (2000-2007).
 }
 \keyword{internal}
