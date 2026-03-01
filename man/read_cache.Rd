@@ -15,6 +15,6 @@ read_cache(end_year, type)
 Cached data frame
 }
 \description{
-Read data from cache
+Reads from rappdirs cache first, then falls back to bundled package data.
 }
 \keyword{internal}
