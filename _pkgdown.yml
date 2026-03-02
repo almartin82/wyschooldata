@@ -32,10 +32,11 @@ navbar:
 
 reference:
 - title: Fetch Data
-  desc: Download enrollment data from WDE
+  desc: Download enrollment and directory data from WDE
   contents:
   - fetch_enr
   - fetch_enr_multi
+  - fetch_directory
   - get_available_years
 
 - title: Process & Tidy
@@ -45,11 +46,17 @@ reference:
   - id_enr_aggs
   - enr_grade_aggs
 
+- title: Import Local Data
+  desc: Import manually downloaded data files
+  contents:
+  - import_local_directory
+
 - title: Cache Management
   desc: Manage locally cached data
   contents:
   - cache_status
   - clear_cache
+  - clear_directory_cache
 
 articles:
 - title: Getting Started
