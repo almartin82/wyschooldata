@@ -2,12 +2,14 @@
 
 ## Fetch Data
 
-Download enrollment data from WDE
+Download enrollment and directory data from WDE
 
 - [`fetch_enr()`](https://almartin82.github.io/wyschooldata/reference/fetch_enr.md)
   : Fetch Wyoming enrollment data
 - [`fetch_enr_multi()`](https://almartin82.github.io/wyschooldata/reference/fetch_enr_multi.md)
   : Fetch enrollment data for multiple years
+- [`fetch_directory()`](https://almartin82.github.io/wyschooldata/reference/fetch_directory.md)
+  : Fetch Wyoming school directory data
 - [`get_available_years()`](https://almartin82.github.io/wyschooldata/reference/get_available_years.md)
   : Get available years for Wyoming enrollment data
 
@@ -22,6 +24,13 @@ Transform data into analysis-ready formats
 - [`enr_grade_aggs()`](https://almartin82.github.io/wyschooldata/reference/enr_grade_aggs.md)
   : Custom Enrollment Grade Level Aggregates
 
+## Import Local Data
+
+Import manually downloaded data files
+
+- [`import_local_directory()`](https://almartin82.github.io/wyschooldata/reference/import_local_directory.md)
+  : Import local school directory data file
+
 ## Cache Management
 
 Manage locally cached data
@@ -30,3 +39,5 @@ Manage locally cached data
   : Show cache status
 - [`clear_cache()`](https://almartin82.github.io/wyschooldata/reference/clear_cache.md)
   : Clear the wyschooldata cache
+- [`clear_directory_cache()`](https://almartin82.github.io/wyschooldata/reference/clear_directory_cache.md)
+  : Clear school directory cache
